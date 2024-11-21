@@ -1,0 +1,150 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "API для работы с пациентами и их данными",
+        "title": "Patient Service API",
+        "termsOfService": "http://swagger.io.terms/",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/patients": {
+            "get": {
+                "description": "Возвращает список всех пациентов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Получить список пациентов",
+                "operationId": "get_patients",
+                "responses": {
+                    "200": {
+                        "description": "Список пациентов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Patient"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Patient": {
+            "type": "object",
+            "required": [
+                "address",
+                "animal",
+                "breed",
+                "doctorId",
+                "fio",
+                "gender",
+                "id",
+                "name",
+                "phone",
+                "status"
+            ],
+            "properties": {
+                "address": {
+                    "description": "Адрес проживания, обязательно",
+                    "type": "string"
+                },
+                "age": {
+                    "description": "Возраст животного в годах, \u003e= 0",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "animal": {
+                    "description": "Животное, обязательно",
+                    "type": "string"
+                },
+                "breed": {
+                    "description": "Порода животного, обязательно",
+                    "type": "string"
+                },
+                "doctorId": {
+                    "description": "идентификатор доктора из кейклоак UUID",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "fio": {
+                    "description": "ФИО пациента, обязательно",
+                    "type": "string"
+                },
+                "gender": {
+                    "description": "Пол животного, \"male\" или \"female\"",
+                    "type": "string",
+                    "enum": [
+                        "мужской",
+                        "женский"
+                    ]
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isNeutered": {
+                    "description": "Информация о стерилизации",
+                    "type": "boolean"
+                },
+                "name": {
+                    "description": "Имя животного, обязательно",
+                    "type": "string"
+                },
+                "phone": {
+                    "description": "Телефон в формате E.164, обязательно",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Статус пациента, обязательно",
+                    "type": "string"
+                },
+                "temperature": {
+                    "description": "Температура тела животного, \u003e= 0",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "weight": {
+                    "description": "Вес животного в кг, \u003e= 0",
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        }
+    }
+}

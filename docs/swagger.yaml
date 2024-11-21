@@ -1,0 +1,108 @@
+definitions:
+  models.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      description:
+        type: string
+      message:
+        type: string
+    type: object
+  models.Patient:
+    properties:
+      address:
+        description: Адрес проживания, обязательно
+        type: string
+      age:
+        description: Возраст животного в годах, >= 0
+        minimum: 0
+        type: number
+      animal:
+        description: Животное, обязательно
+        type: string
+      breed:
+        description: Порода животного, обязательно
+        type: string
+      doctorId:
+        description: идентификатор доктора из кейклоак UUID
+        format: uuid
+        type: string
+      fio:
+        description: ФИО пациента, обязательно
+        type: string
+      gender:
+        description: Пол животного, "male" или "female"
+        enum:
+        - мужской
+        - женский
+        type: string
+      id:
+        type: integer
+      isNeutered:
+        description: Информация о стерилизации
+        type: boolean
+      name:
+        description: Имя животного, обязательно
+        type: string
+      phone:
+        description: Телефон в формате E.164, обязательно
+        type: string
+      status:
+        description: Статус пациента, обязательно
+        type: string
+      temperature:
+        description: Температура тела животного, >= 0
+        minimum: 0
+        type: number
+      weight:
+        description: Вес животного в кг, >= 0
+        minimum: 0
+        type: number
+    required:
+    - address
+    - animal
+    - breed
+    - doctorId
+    - fio
+    - gender
+    - id
+    - name
+    - phone
+    - status
+    type: object
+info:
+  contact: {}
+  description: API для работы с пациентами и их данными
+  termsOfService: http://swagger.io.terms/
+  title: Patient Service API
+  version: "1.0"
+paths:
+  /patients:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список всех пациентов
+      operationId: get_patients
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список пациентов
+          schema:
+            items:
+              $ref: '#/definitions/models.Patient'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получить список пациентов
+      tags:
+      - patients
+schemes:
+- http
+swagger: "2.0"

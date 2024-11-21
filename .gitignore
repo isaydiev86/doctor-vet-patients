@@ -1,0 +1,5 @@
+.idea
+vendor
+internal/generated
+.run
+.DS_Store
