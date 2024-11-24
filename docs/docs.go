@@ -16,6 +16,53 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/create_patient": {
+            "post": {
+                "description": "Создать нового пациента",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Создать нового пациента",
+                "operationId": "create_patient",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Patient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/patients": {
             "get": {
                 "description": "Возвращает список всех пациентов",
@@ -43,13 +90,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Ошибка запроса",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка сервера",
                         "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -57,20 +104,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Patient": {
             "type": "object",
             "required": [
@@ -121,7 +154,8 @@ const docTemplate = `{
                     ]
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "isNeutered": {
                     "description": "Информация о стерилизации",
@@ -148,6 +182,20 @@ const docTemplate = `{
                     "description": "Вес животного в кг, \u003e= 0",
                     "type": "number",
                     "minimum": 0
+                }
+            }
+        },
+        "models.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
                 }
             }
         }

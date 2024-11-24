@@ -2,7 +2,7 @@ package models
 
 // Patient представляет пациента и связанную с ним информацию.
 type Patient struct {
-	ID          int64   `json:"id" validate:"required"`
+	ID          int64   `json:"id" example:"1" validate:"required"`
 	DoctorID    string  `json:"doctorId"  validate:"required" format:"uuid"`      // идентификатор доктора из кейклоак UUID
 	Fio         string  `json:"fio"  validate:"required"`                         // ФИО пациента, обязательно
 	Phone       string  `json:"phone" validate:"required,e164"`                   // Телефон в формате E.164, обязательно
@@ -18,7 +18,7 @@ type Patient struct {
 	IsNeutered  bool    `json:"isNeutered"`                                       // Информация о стерилизации
 }
 
-type ErrorResponse struct {
+type Response struct {
 	Code        int    `json:"code"`
 	Message     string `json:"message"`
 	Description string `json:"description"`

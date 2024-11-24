@@ -1,13 +1,4 @@
 definitions:
-  models.ErrorResponse:
-    properties:
-      code:
-        type: integer
-      description:
-        type: string
-      message:
-        type: string
-    type: object
   models.Patient:
     properties:
       address:
@@ -37,6 +28,7 @@ definitions:
         - женский
         type: string
       id:
+        example: 1
         type: integer
       isNeutered:
         description: Информация о стерилизации
@@ -70,6 +62,15 @@ definitions:
     - phone
     - status
     type: object
+  models.Response:
+    properties:
+      code:
+        type: integer
+      description:
+        type: string
+      message:
+        type: string
+    type: object
 info:
   contact: {}
   description: API для работы с пациентами и их данными
@@ -77,6 +78,37 @@ info:
   title: Patient Service API
   version: "1.0"
 paths:
+  /create_patient:
+    post:
+      consumes:
+      - application/json
+      description: Создать нового пациента
+      operationId: create_patient
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/models.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Создать нового пациента
+      tags:
+      - patients
   /patients:
     get:
       consumes:
@@ -95,11 +127,11 @@ paths:
         "400":
           description: Ошибка запроса
           schema:
-            $ref: '#/definitions/models.ErrorResponse'
+            $ref: '#/definitions/models.Response'
         "500":
           description: Внутренняя ошибка сервера
           schema:
-            $ref: '#/definitions/models.ErrorResponse'
+            $ref: '#/definitions/models.Response'
       summary: Получить список пациентов
       tags:
       - patients

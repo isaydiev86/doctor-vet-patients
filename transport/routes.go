@@ -11,6 +11,10 @@ func RegisterRoutes(app *fiber.App, svc service.IService) {
 
 	// Передаем сервис в обработчики
 	app.Get("/patients", func(c *fiber.Ctx) error {
-		return PatientHandler(c, svc)
+		return PatientsHandler(c, svc)
+	})
+
+	app.Post("/patient", func(c *fiber.Ctx) error {
+		return PatientAddHandler(c, svc)
 	})
 }
