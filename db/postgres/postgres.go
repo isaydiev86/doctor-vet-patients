@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"doctor-vet-patients/db"
-	"doctor-vet-patients/db/entity"
+	"doctor-vet-patients/db/models"
 	"doctor-vet-patients/internal/dto"
 )
 
@@ -34,7 +34,7 @@ func getPatients() []dto.Patient {
 		Weight:      4.5,
 		Temperature: 37,
 		Gender:      "мужской",
-		Status:      entity.InProcess.String(),
+		Status:      models.InProcess.String(),
 		IsNeutered:  false,
 	})
 	patients = append(patients, dto.Patient{
@@ -50,7 +50,7 @@ func getPatients() []dto.Patient {
 		Weight:      1.5,
 		Temperature: 39,
 		Gender:      "женский",
-		Status:      entity.InProcess.String(),
+		Status:      models.InProcess.String(),
 		IsNeutered:  true,
 	})
 

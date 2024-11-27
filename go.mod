@@ -5,6 +5,7 @@ go 1.22.0
 require (
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/gofiber/swagger v1.1.0
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/swaggo/swag v1.16.4
 )
 
