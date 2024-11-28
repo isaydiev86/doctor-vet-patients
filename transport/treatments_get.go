@@ -14,10 +14,10 @@ import (
 //	@Summary		Получить список лечений
 //	@Description	Возвращает список всех лечений
 //	@ID				get_treatments
-//	@Tags			patients
+//	@Tags			treatment
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{array}		models.Patient	"Список лечений"
+//	@Success		200	{array}		models.Treatment	"Список лечений"
 //	@Failure		400	{object}	models.Response	"Ошибка запроса"
 //	@Failure		500	{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/treatments [get]
@@ -38,21 +38,20 @@ func TreatmentsHandler(c *fiber.Ctx, svc service.Service) error {
 	treatments := make([]models.Treatment, len(treatmentsData))
 	for i, p := range treatmentsData {
 		treatments[i] = models.Treatment{
-			ID:            p.ID,
-			PatientID:     p.PatientID,
-			DoctorID:      p.DoctorID,
-			Status:        p.Status,
-			CreatedAt:     p.CreatedAt,
-			UpdatedAt:     p.UpdatedAt,
-			BeginAt:       p.BeginAt,
-			EndAt:         p.EndAt,
-			Comment:       p.Comment,
-			IsActive:      p.IsActive,
-			Age:           p.Age,
-			Weight:        p.Weight,
-			Temperature:   p.Temperature,
-			Patient:       getPatientOfDTO(p.Patient),
-			Prescriptions: getPrescriptionOfDTO(p.Prescription),
+			ID:          p.ID,
+			PatientID:   p.PatientID,
+			DoctorID:    p.DoctorID,
+			Status:      p.Status,
+			CreatedAt:   p.CreatedAt,
+			UpdatedAt:   p.UpdatedAt,
+			BeginAt:     p.BeginAt,
+			EndAt:       p.EndAt,
+			Comment:     p.Comment,
+			IsActive:    p.IsActive,
+			Age:         p.Age,
+			Weight:      p.Weight,
+			Temperature: p.Temperature,
+			Patient:     getPatientOfDTO(p.Patient),
 		}
 	}
 
@@ -74,19 +73,4 @@ func getPatientOfDTO(dto dto.Patient) models.Patient {
 		Status:     dto.Status,
 		IsNeutered: dto.IsNeutered,
 	}
-}
-
-func getPrescriptionOfDTO(dto []dto.Prescription) []models.Prescription {
-	prescription := make([]models.Prescription, len(dto))
-	for i, p := range dto {
-		prescription[i] = models.Prescription{
-			ID:          p.ID,
-			TreatmentID: p.TreatmentID,
-			Preparation: p.Preparation,
-			Dose:        p.Dose,
-			Course:      p.Course,
-			Amount:      p.Amount,
-		}
-	}
-	return prescription
 }

@@ -1,5 +1,7 @@
 package dto
 
+import "time"
+
 type Prescription struct {
 	ID          int64
 	TreatmentID int64
@@ -7,4 +9,6 @@ type Prescription struct {
 	Dose        string
 	Course      string
 	Amount      string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
