@@ -18,8 +18,8 @@ func RegisterRoutes(app *fiber.App, svc service.Service) {
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
-	app.Get("/patients", func(c *fiber.Ctx) error {
-		return PatientsHandler(c, svc)
+	app.Get("/treatment", func(c *fiber.Ctx) error {
+		return TreatmentsHandler(c, svc)
 	})
 
 	app.Post("/patient", func(c *fiber.Ctx) error {

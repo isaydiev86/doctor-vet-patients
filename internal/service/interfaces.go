@@ -7,6 +7,6 @@ import (
 )
 
 type Database interface {
-	GetPatients(ctx context.Context) ([]dto.Patient, error)
+	GetTreatments(ctx context.Context) ([]dto.Treatment, error)
 	CreatePatient(ctx context.Context, patient dto.Patient) error
 }

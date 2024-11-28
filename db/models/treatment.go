@@ -24,8 +24,8 @@ type Treatment struct {
 	UpdatedAt   time.Time `db:"updated_at"`
 	BeginAt     time.Time `db:"begin_at"`  // начало лечения
 	EndAt       time.Time `db:"end_at"`    //конец лечения
-	comment     string    `db:"comment"`   // информация в случаи закрытия лечения
-	isActive    int64     `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
+	Comment     string    `db:"comment"`   // информация в случаи закрытия лечения
+	IsActive    int64     `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
 	Age         float64   `db:"age"`
 	Weight      float64   `db:"weight"`
 }

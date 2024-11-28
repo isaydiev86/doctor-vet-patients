@@ -3,12 +3,13 @@ package transport
 import (
 	"context"
 
-	"doctor-vet-patients/mapper"
+	"doctor-vet-patients/internal/dto"
+	"doctor-vet-patients/internal/service"
 	"doctor-vet-patients/transport/models"
 	"github.com/gofiber/fiber/v2"
 )
 
-// PatientAddHandler Получить список пациентов
+// PatientAddHandler Создать нового пациента
 //
 //	@Summary		Создать нового пациента
 //	@Description	Создать нового пациента
@@ -23,7 +24,7 @@ import (
 //	@Failure		400		{object}	models.Response	"Ошибка запроса"
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/create_patient [post]
-func PatientAddHandler(c *fiber.Ctx, svc service.IService) error {
+func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
 	ctx := context.Background()
 
 	var patient models.Patient
@@ -36,7 +37,7 @@ func PatientAddHandler(c *fiber.Ctx, svc service.IService) error {
 	}
 
 	// Получаем пациентов через сервис
-	err := svc.CreatePatient(ctx, mapper.GetDtoPatientOfApi(patient))
+	err := svc.CreatePatient(ctx, getDtoPatientOfApi(patient))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
@@ -50,4 +51,20 @@ func PatientAddHandler(c *fiber.Ctx, svc service.IService) error {
 		Message:     "Success",
 		Description: "Success",
 	})
+}
+
+func getDtoPatientOfApi(patient models.Patient) dto.Patient {
+	return dto.Patient{
+		DoctorID:   patient.DoctorID,
+		Fio:        patient.Fio,
+		Phone:      patient.Phone,
+		Address:    patient.Address,
+		Animal:     patient.Animal,
+		Name:       patient.Name,
+		Breed:      patient.Breed,
+		Age:        patient.Age,
+		Gender:     patient.Gender,
+		Status:     patient.Status,
+		IsNeutered: patient.IsNeutered,
+	}
 }
