@@ -1,17 +1,42 @@
 package db
 
-import "github.com/jmoiron/sqlx"
+import (
+	"context"
+
+	"doctor-vet-patients/pkg/dbutil"
+	"github.com/pkg/errors"
+)
 
 type DB struct {
-	*sqlx.DB
+	*dbutil.DB
+	cfg dbutil.Config
 }
 
-func New(cfg Config) (*DB, error) {
-	/*db, err := sqlx.Connect("postgres", cfg.dsn)
+func New(cfg dbutil.Config) (*DB, error) {
+	db, err := dbutil.New(cfg)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "dbutil new")
 	}
-	return db, nil
-	/**/
-	return &DB{}, nil
+	return &DB{DB: db, cfg: cfg}, nil
+}
+
+func (db *DB) Start(ctx context.Context) error { return db.DB.Start(ctx) }
+func (db *DB) Stop(ctx context.Context) error  { return db.DB.Stop(ctx) }
+
+func (db *DB) Tx(ctx context.Context, f func(any) error) error {
+	tx, err := db.DB.Tx(ctx)
+	if err != nil {
+		return err
+	}
+	txDB := &DB{DB: tx, cfg: db.cfg}
+	if err := f(txDB); err != nil {
+		if err := tx.Rollback(ctx); err != nil {
+			return err
+		}
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	return nil
 }

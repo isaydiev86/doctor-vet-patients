@@ -1,5 +1,5 @@
 definitions:
-  models.Patient:
+  doctor-vet-patients_transport_models.Patient:
     properties:
       address:
         description: Адрес проживания, обязательно
@@ -13,10 +13,6 @@ definitions:
         type: string
       breed:
         description: Порода животного, обязательно
-        type: string
-      doctorId:
-        description: идентификатор доктора из кейклоак UUID
-        format: uuid
         type: string
       fio:
         description: ФИО пациента, обязательно
@@ -39,28 +35,92 @@ definitions:
       phone:
         description: Телефон в формате E.164, обязательно
         type: string
-      status:
-        description: Статус пациента, обязательно
-        type: string
-      temperature:
-        description: Температура тела животного, >= 0
-        minimum: 0
-        type: number
-      weight:
-        description: Вес животного в кг, >= 0
-        minimum: 0
-        type: number
     required:
     - address
     - animal
     - breed
-    - doctorId
     - fio
     - gender
     - id
     - name
     - phone
+    type: object
+  doctor-vet-patients_transport_models.Prescription:
+    properties:
+      amount:
+        type: string
+      course:
+        type: string
+      createdAt:
+        type: string
+      dose:
+        type: string
+      id:
+        type: integer
+      preparation:
+        type: string
+      treatmentId:
+        type: integer
+      updatedAt:
+        type: string
+    required:
+    - amount
+    - course
+    - createdAt
+    - dose
+    - id
+    - preparation
+    - treatmentId
+    - updatedAt
+    type: object
+  doctor-vet-patients_transport_models.Treatment:
+    properties:
+      age:
+        type: number
+      beginAt:
+        type: string
+      comment:
+        type: string
+      createdAt:
+        type: string
+      doctorId:
+        type: string
+      endAt:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: integer
+      patient:
+        allOf:
+        - $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
+        description: инфа пациента
+      patientId:
+        type: integer
+      status:
+        type: string
+      temperature:
+        description: Температура тела животного, >= 0
+        minimum: 0
+        type: number
+      updatedAt:
+        type: string
+      weight:
+        description: Вес животного в кг, >= 0
+        minimum: 0
+        type: number
+    required:
+    - age
+    - beginAt
+    - comment
+    - createdAt
+    - doctorId
+    - endAt
+    - id
+    - isActive
+    - patientId
     - status
+    - updatedAt
     type: object
   models.Response:
     properties:
@@ -71,14 +131,67 @@ definitions:
       message:
         type: string
     type: object
+  models.TreatmentDetail:
+    properties:
+      age:
+        type: number
+      beginAt:
+        type: string
+      comment:
+        type: string
+      createdAt:
+        type: string
+      doctorId:
+        type: string
+      endAt:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: integer
+      patient:
+        allOf:
+        - $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
+        description: инфа пациента
+      patientId:
+        type: integer
+      prescriptions:
+        description: список лечения
+        items:
+          $ref: '#/definitions/doctor-vet-patients_transport_models.Prescription'
+        type: array
+      status:
+        type: string
+      temperature:
+        description: Температура тела животного, >= 0
+        minimum: 0
+        type: number
+      updatedAt:
+        type: string
+      weight:
+        description: Вес животного в кг, >= 0
+        minimum: 0
+        type: number
+    required:
+    - age
+    - beginAt
+    - comment
+    - createdAt
+    - doctorId
+    - endAt
+    - id
+    - isActive
+    - patientId
+    - status
+    - updatedAt
+    type: object
 info:
   contact: {}
   description: API для работы с пациентами и их данными
   termsOfService: http://swagger.io.terms/
-  title: Patient Service API
   version: "1.0"
 paths:
-  /create_patient:
+  /patient:
     post:
       consumes:
       - application/json
@@ -90,7 +203,7 @@ paths:
         name: Form
         required: true
         schema:
-          $ref: '#/definitions/models.Patient'
+          $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
       produces:
       - application/json
       responses:
@@ -109,20 +222,20 @@ paths:
       summary: Создать нового пациента
       tags:
       - patients
-  /patients:
+  /treatment/{id}:
     get:
       consumes:
       - application/json
-      description: Возвращает список всех пациентов
-      operationId: get_patients
+      description: Возвращает детали  лечения
+      operationId: get_treatment
       produces:
       - application/json
       responses:
         "200":
-          description: Список пациентов
+          description: Детали лечения
           schema:
             items:
-              $ref: '#/definitions/models.Patient'
+              $ref: '#/definitions/models.TreatmentDetail'
             type: array
         "400":
           description: Ошибка запроса
@@ -132,9 +245,35 @@ paths:
           description: Внутренняя ошибка сервера
           schema:
             $ref: '#/definitions/models.Response'
-      summary: Получить список пациентов
+      summary: Получить детали лечения
       tags:
-      - patients
+      - treatment
+  /treatments:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список всех лечений
+      operationId: get_treatments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список лечений
+          schema:
+            items:
+              $ref: '#/definitions/doctor-vet-patients_transport_models.Treatment'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Получить список лечений
+      tags:
+      - treatment
 schemes:
 - http
 swagger: "2.0"

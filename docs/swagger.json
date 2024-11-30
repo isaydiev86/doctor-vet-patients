@@ -5,13 +5,12 @@
     "swagger": "2.0",
     "info": {
         "description": "API для работы с пациентами и их данными",
-        "title": "Patient Service API",
         "termsOfService": "http://swagger.io.terms/",
         "contact": {},
         "version": "1.0"
     },
     "paths": {
-        "/create_patient": {
+        "/patient": {
             "post": {
                 "description": "Создать нового пациента",
                 "consumes": [
@@ -32,7 +31,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Patient"
+                            "$ref": "#/definitions/doctor-vet-patients_transport_models.Patient"
                         }
                     }
                 ],
@@ -58,9 +57,9 @@
                 }
             }
         },
-        "/patients": {
+        "/treatment/{id}": {
             "get": {
-                "description": "Возвращает список всех пациентов",
+                "description": "Возвращает детали  лечения",
                 "consumes": [
                     "application/json"
                 ],
@@ -68,17 +67,56 @@
                     "application/json"
                 ],
                 "tags": [
-                    "patients"
+                    "treatment"
                 ],
-                "summary": "Получить список пациентов",
-                "operationId": "get_patients",
+                "summary": "Получить детали лечения",
+                "operationId": "get_treatment",
                 "responses": {
                     "200": {
-                        "description": "Список пациентов",
+                        "description": "Детали лечения",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Patient"
+                                "$ref": "#/definitions/models.TreatmentDetail"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/treatments": {
+            "get": {
+                "description": "Возвращает список всех лечений",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "treatment"
+                ],
+                "summary": "Получить список лечений",
+                "operationId": "get_treatments",
+                "responses": {
+                    "200": {
+                        "description": "Список лечений",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/doctor-vet-patients_transport_models.Treatment"
                             }
                         }
                     },
@@ -99,19 +137,17 @@
         }
     },
     "definitions": {
-        "models.Patient": {
+        "doctor-vet-patients_transport_models.Patient": {
             "type": "object",
             "required": [
                 "address",
                 "animal",
                 "breed",
-                "doctorId",
                 "fio",
                 "gender",
                 "id",
                 "name",
-                "phone",
-                "status"
+                "phone"
             ],
             "properties": {
                 "address": {
@@ -130,11 +166,6 @@
                 "breed": {
                     "description": "Порода животного, обязательно",
                     "type": "string"
-                },
-                "doctorId": {
-                    "description": "идентификатор доктора из кейклоак UUID",
-                    "type": "string",
-                    "format": "uuid"
                 },
                 "fio": {
                     "description": "ФИО пациента, обязательно",
@@ -163,15 +194,109 @@
                 "phone": {
                     "description": "Телефон в формате E.164, обязательно",
                     "type": "string"
+                }
+            }
+        },
+        "doctor-vet-patients_transport_models.Prescription": {
+            "type": "object",
+            "required": [
+                "amount",
+                "course",
+                "createdAt",
+                "dose",
+                "id",
+                "preparation",
+                "treatmentId",
+                "updatedAt"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "string"
+                },
+                "course": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "dose": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "preparation": {
+                    "type": "string"
+                },
+                "treatmentId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "doctor-vet-patients_transport_models.Treatment": {
+            "type": "object",
+            "required": [
+                "age",
+                "beginAt",
+                "comment",
+                "createdAt",
+                "doctorId",
+                "endAt",
+                "id",
+                "isActive",
+                "patientId",
+                "status",
+                "updatedAt"
+            ],
+            "properties": {
+                "age": {
+                    "type": "number"
+                },
+                "beginAt": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "doctorId": {
+                    "type": "string"
+                },
+                "endAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isActive": {
+                    "type": "integer"
+                },
+                "patient": {
+                    "description": "инфа пациента",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/doctor-vet-patients_transport_models.Patient"
+                        }
+                    ]
+                },
+                "patientId": {
+                    "type": "integer"
                 },
                 "status": {
-                    "description": "Статус пациента, обязательно",
                     "type": "string"
                 },
                 "temperature": {
                     "description": "Температура тела животного, \u003e= 0",
                     "type": "number",
                     "minimum": 0
+                },
+                "updatedAt": {
+                    "type": "string"
                 },
                 "weight": {
                     "description": "Вес животного в кг, \u003e= 0",
@@ -191,6 +316,82 @@
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "models.TreatmentDetail": {
+            "type": "object",
+            "required": [
+                "age",
+                "beginAt",
+                "comment",
+                "createdAt",
+                "doctorId",
+                "endAt",
+                "id",
+                "isActive",
+                "patientId",
+                "status",
+                "updatedAt"
+            ],
+            "properties": {
+                "age": {
+                    "type": "number"
+                },
+                "beginAt": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "doctorId": {
+                    "type": "string"
+                },
+                "endAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isActive": {
+                    "type": "integer"
+                },
+                "patient": {
+                    "description": "инфа пациента",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/doctor-vet-patients_transport_models.Patient"
+                        }
+                    ]
+                },
+                "patientId": {
+                    "type": "integer"
+                },
+                "prescriptions": {
+                    "description": "список лечения",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/doctor-vet-patients_transport_models.Prescription"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "temperature": {
+                    "description": "Температура тела животного, \u003e= 0",
+                    "type": "number",
+                    "minimum": 0
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "weight": {
+                    "description": "Вес животного в кг, \u003e= 0",
+                    "type": "number",
+                    "minimum": 0
                 }
             }
         }

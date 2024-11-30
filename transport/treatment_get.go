@@ -21,7 +21,7 @@ import (
 //	@Success		200	{array}		models.TreatmentDetail	"Детали лечения"
 //	@Failure		400	{object}	models.Response	"Ошибка запроса"
 //	@Failure		500	{object}	models.Response	"Внутренняя ошибка сервера"
-//	@Router			/treatment/id [get]
+//	@Router			/treatment/{id} [get]
 func TreatmentHandler(c *fiber.Ctx, svc service.Service) error {
 	ctx := context.Background()
 
@@ -40,8 +40,8 @@ func TreatmentHandler(c *fiber.Ctx, svc service.Service) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
-			Message:     "Error",
-			Description: "Error for backend",
+			Message:     err.Error(),
+			Description: err.Error(),
 		})
 	}
 

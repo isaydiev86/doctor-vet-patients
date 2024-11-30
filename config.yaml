@@ -1,0 +1,13 @@
+db:
+  dialect: postgres
+  schema: public
+  host: localhost
+  port: 5432
+  user: doctor_vet
+  password: doctor_vet
+  name: doctor_vet
+  debug: true
+  max_idle_conns: 25
+  max_open_conns: 25
+  conn_max_lifetime: 5m
+  ssl: false

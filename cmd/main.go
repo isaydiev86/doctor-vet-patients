@@ -2,14 +2,18 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"doctor-vet-patients/pkg/dbutil"
+	"doctor-vet-patients/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
 
 	"doctor-vet-patients/db"
 	"doctor-vet-patients/internal/service"
@@ -17,30 +21,27 @@ import (
 )
 
 type Config struct {
-	DB db.Config
+	DB *dbutil.Config `yaml:"db"`
 }
 
-//TODO:
-// take transaction away
-// remove pointers
-
 func main() {
+	ctx := context.Background()
 
-	var cfg Config
-	_ = cfg
+	cfg, err := initConfig()
+	if err != nil {
+		log.Fatalf("Не удалось инициализировать конфигурацию: %v", err)
+	}
 
-	app := fiber.New()
-
-	// Инициализация хранилища
-	storage, err := db.New(cfg.DB)
+	bd, err := initDB(ctx, cfg)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "cannot create application"))
 	}
-	//
+
 	//// Инициализация сервиса
-	svc := service.New(service.Relation{DB: storage})
-	//
+	svc := service.New(service.Relation{DB: bd})
+
 	//// Регистрация маршрутов с передачей сервиса
+	app := fiber.New()
 	transport.RegisterRoutes(app, *svc)
 
 	quit := make(chan os.Signal, 1)
@@ -65,4 +66,35 @@ func main() {
 	}
 
 	log.Println("Server gracefully stopped")
+}
+
+func initConfig() (*Config, error) {
+	data, err := os.ReadFile("config.yaml")
+	if err != nil {
+		return nil, fmt.Errorf("ошибка чтения файла: %w", err)
+	}
+
+	var config Config
+
+	err = yaml.Unmarshal(data, &config)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка парсинга YAML: %w", err)
+	}
+
+	return &config, nil
+}
+
+func initDB(ctx context.Context, cfg *Config) (*db.DB, error) {
+	// Инициализация хранилища
+	bd, err := db.New(utils.FromPtr(cfg.DB))
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "cannot create application"))
+	}
+
+	err = bd.DB.Start(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return bd, err
 }

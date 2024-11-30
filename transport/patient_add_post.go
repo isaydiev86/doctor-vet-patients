@@ -23,7 +23,7 @@ import (
 //	@Success		200		{object}	models.Response	"Успешный ответ"
 //	@Failure		400		{object}	models.Response	"Ошибка запроса"
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
-//	@Router			/create_patient [post]
+//	@Router			/patient [post]
 func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
 	ctx := context.Background()
 
@@ -41,13 +41,13 @@ func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
-			Message:     "Error",
-			Description: "Error for backend",
+			Message:     err.Error(),
+			Description: err.Error(),
 		})
 	}
 
 	return c.JSON(models.Response{
-		Code:        200,
+		Code:        fiber.StatusOK,
 		Message:     "Success",
 		Description: "Success",
 	})
@@ -55,7 +55,6 @@ func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
 
 func getDtoPatientOfApi(patient models.Patient) dto.Patient {
 	return dto.Patient{
-		DoctorID:   patient.DoctorID,
 		Fio:        patient.Fio,
 		Phone:      patient.Phone,
 		Address:    patient.Address,
@@ -64,7 +63,6 @@ func getDtoPatientOfApi(patient models.Patient) dto.Patient {
 		Breed:      patient.Breed,
 		Age:        patient.Age,
 		Gender:     patient.Gender,
-		Status:     patient.Status,
 		IsNeutered: patient.IsNeutered,
 	}
 }

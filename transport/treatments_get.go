@@ -30,8 +30,8 @@ func TreatmentsHandler(c *fiber.Ctx, svc service.Service) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
-			Message:     "Error",
-			Description: "Error for backend",
+			Message:     err.Error(),
+			Description: err.Error(),
 		})
 	}
 
@@ -61,7 +61,6 @@ func TreatmentsHandler(c *fiber.Ctx, svc service.Service) error {
 func getPatientOfDTO(dto dto.Patient) models.Patient {
 	return models.Patient{
 		ID:         dto.ID,
-		DoctorID:   dto.DoctorID,
 		Fio:        dto.Fio,
 		Phone:      dto.Phone,
 		Address:    dto.Address,
@@ -70,7 +69,6 @@ func getPatientOfDTO(dto dto.Patient) models.Patient {
 		Breed:      dto.Breed,
 		Age:        dto.Age,
 		Gender:     dto.Gender,
-		Status:     dto.Status,
 		IsNeutered: dto.IsNeutered,
 	}
 }

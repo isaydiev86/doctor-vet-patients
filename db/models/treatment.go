@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"database/sql"
+	"encoding/json"
+	"time"
+)
 
 type StatusPrescription string
 
@@ -15,17 +19,50 @@ func (s StatusPrescription) String() string { return string(s) }
 
 // Treatment лечение пациента
 type Treatment struct {
-	ID          int64   `db:"id"`
-	PatientID   int64   `db:"patient_id"`
-	DoctorID    string  `db:"doctor_id"`
-	Temperature float64 `db:"temperature"`
-	Status      StatusPrescription
-	CreatedAt   time.Time `db:"created_at"`
-	UpdatedAt   time.Time `db:"updated_at"`
-	BeginAt     time.Time `db:"begin_at"`  // начало лечения
-	EndAt       time.Time `db:"end_at"`    //конец лечения
-	Comment     string    `db:"comment"`   // информация в случаи закрытия лечения
-	IsActive    int64     `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
-	Age         float64   `db:"age"`
-	Weight      float64   `db:"weight"`
+	ID          int64           `db:"id"`
+	PatientID   int64           `db:"patient_id"`
+	DoctorID    string          `db:"doctor_id"`
+	Status      sql.NullString  `db:"status"`
+	CreatedAt   time.Time       `db:"created_at"`
+	UpdatedAt   time.Time       `db:"updated_at"`
+	BeginAt     sql.NullTime    `db:"begin_at"`  // начало лечения
+	EndAt       sql.NullTime    `db:"end_at"`    //конец лечения
+	Comment     sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
+	IsActive    int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
+	Weight      sql.NullFloat64 `db:"weight"`
+	Temperature sql.NullFloat64 `db:"temperature"`
+}
+
+type TreatmentRow struct {
+	ID          int64           `db:"id"`
+	PatientID   int64           `db:"patient_id"`
+	DoctorID    sql.NullString  `db:"doctor_id"`
+	Status      sql.NullString  `db:"status"`
+	CreatedAt   time.Time       `db:"created_at"`
+	UpdatedAt   time.Time       `db:"updated_at"`
+	BeginAt     sql.NullTime    `db:"begin_at"`  // начало лечения
+	EndAt       sql.NullTime    `db:"end_at"`    //конец лечения
+	Comment     sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
+	IsActive    int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
+	Weight      sql.NullFloat64 `db:"weight"`
+	Temperature sql.NullFloat64 `db:"temperature"`
+	Patient     `db:"patient"`
+}
+
+type TreatmentDetailRow struct {
+	ID                int64           `db:"id"`
+	PatientID         int64           `db:"patient_id"`
+	DoctorID          sql.NullString  `db:"doctor_id"`
+	Status            sql.NullString  `db:"status"`
+	CreatedAt         time.Time       `db:"created_at"`
+	UpdatedAt         time.Time       `db:"updated_at"`
+	BeginAt           sql.NullTime    `db:"begin_at"`  // начало лечения
+	EndAt             sql.NullTime    `db:"end_at"`    //конец лечения
+	Comment           sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
+	IsActive          int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
+	Weight            sql.NullFloat64 `db:"weight"`
+	Temperature       sql.NullFloat64 `db:"temperature"`
+	Patient           `db:"patient"`
+	PrescriptionsJSON json.RawMessage `db:"prescriptions"`
+	Prescription      []Prescription  `db:"prescription" json:"prescription"`
 }
