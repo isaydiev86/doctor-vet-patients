@@ -11,4 +11,5 @@ type Services interface {
 	GetTreatment(ctx context.Context, id int64) (*dto.TreatmentDetail, error)
 
 	CreatePatient(ctx context.Context, patient dto.Patient) (int64, error)
+	UpdatePatient(ctx context.Context, patient dto.Patient) error
 }

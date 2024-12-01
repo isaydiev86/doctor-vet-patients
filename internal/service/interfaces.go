@@ -14,4 +14,5 @@ type Database interface {
 	CreateTreatment(ctx context.Context, patientID int64) (int64, error)
 
 	CreatePatient(ctx context.Context, patient dto.Patient) (int64, error)
+	UpdatePatient(ctx context.Context, patient dto.Patient) error
 }

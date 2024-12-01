@@ -5,19 +5,21 @@ import (
 
 	"doctor-vet-patients/pkg/dbutil"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 type DB struct {
 	*dbutil.DB
-	cfg dbutil.Config
+	cfg    dbutil.Config
+	logger *zap.Logger
 }
 
-func New(cfg dbutil.Config) (*DB, error) {
+func New(cfg dbutil.Config, logger *zap.Logger) (*DB, error) {
 	db, err := dbutil.New(cfg)
 	if err != nil {
 		return nil, errors.Wrap(err, "dbutil new")
 	}
-	return &DB{DB: db, cfg: cfg}, nil
+	return &DB{DB: db, cfg: cfg, logger: logger}, nil
 }
 
 func (db *DB) Start(ctx context.Context) error { return db.DB.Start(ctx) }

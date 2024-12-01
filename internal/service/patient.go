@@ -31,3 +31,7 @@ func (s *Service) CreatePatient(ctx context.Context, patient dto.Patient) error 
 		return nil
 	})
 }
+
+func (s *Service) UpdatePatient(ctx context.Context, patient dto.Patient) error {
+	return s.svc.DB.UpdatePatient(ctx, patient)
+}

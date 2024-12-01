@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"doctor-vet-patients/internal/dto"
+	"go.uber.org/zap"
 )
 
 func (db *DB) CreatePatient(ctx context.Context, patient dto.Patient) (int64, error) {
@@ -23,6 +24,7 @@ func (db *DB) CreatePatient(ctx context.Context, patient dto.Patient) (int64, er
 	).Scan(&id)
 
 	if err != nil {
+		db.logger.Error("Ошибка создания нового пациента", zap.Error(err))
 		return 0, fmt.Errorf("failed to create patient: %w", err)
 	}
 
@@ -44,6 +46,7 @@ func (db *DB) UpdatePatient(ctx context.Context, patient dto.Patient) error {
 	)
 
 	if err != nil {
+		db.logger.Error("Ошибка редактирования нового пациента", zap.Error(err))
 		return fmt.Errorf("не удалось обновить данные пациента: %w", err)
 	}
 

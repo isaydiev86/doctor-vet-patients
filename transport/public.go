@@ -26,4 +26,7 @@ func RegisterRoutes(app *fiber.App, svc service.Service) {
 	app.Post("/patient", func(c *fiber.Ctx) error {
 		return PatientAddHandler(c, svc)
 	})
+	app.Put("/patient", func(c *fiber.Ctx) error {
+		return PatientUpdateHandler(c, svc)
+	})
 }

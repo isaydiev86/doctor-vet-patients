@@ -9,15 +9,16 @@ import (
 	"syscall"
 	"time"
 
-	"doctor-vet-patients/pkg/dbutil"
-	"doctor-vet-patients/pkg/utils"
-	"github.com/gofiber/fiber/v2"
-	"github.com/pkg/errors"
-	"gopkg.in/yaml.v3"
-
 	"doctor-vet-patients/db"
 	"doctor-vet-patients/internal/service"
+	"doctor-vet-patients/pkg/dbutil"
+	"doctor-vet-patients/pkg/utils"
 	"doctor-vet-patients/transport"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
+	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
@@ -27,18 +28,32 @@ type Config struct {
 func main() {
 	ctx := context.Background()
 
+	logger, err := initLogger()
+	if err != nil {
+		log.Fatalf("Не удалось инициализировать логгер: %v", err)
+	}
+	defer func(logger *zap.Logger) {
+		err := logger.Sync()
+		if err != nil {
+			log.Fatalf("Не удалось закрыть логгер: %v", err)
+		}
+	}(logger) // Flush записанные логи перед завершением
+
+	undo := zap.RedirectStdLog(logger)
+	defer undo()
+
 	cfg, err := initConfig()
 	if err != nil {
 		log.Fatalf("Не удалось инициализировать конфигурацию: %v", err)
 	}
 
-	bd, err := initDB(ctx, cfg)
+	bd, err := initDB(ctx, cfg, logger)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "cannot create application"))
 	}
 
 	//// Инициализация сервиса
-	svc := service.New(service.Relation{DB: bd})
+	svc := service.New(service.Relation{DB: bd}, logger)
 
 	//// Регистрация маршрутов с передачей сервиса
 	app := fiber.New()
@@ -68,6 +83,14 @@ func main() {
 	log.Println("Server gracefully stopped")
 }
 
+func initLogger() (*zap.Logger, error) {
+	logger, err := zap.NewProduction() // или zap.NewDevelopment() для разработки
+	if err != nil {
+		return nil, fmt.Errorf("ошибка инициализации логгера: %w", err)
+	}
+	return logger, nil
+}
+
 func initConfig() (*Config, error) {
 	data, err := os.ReadFile("config.yaml")
 	if err != nil {
@@ -84,17 +107,19 @@ func initConfig() (*Config, error) {
 	return &config, nil
 }
 
-func initDB(ctx context.Context, cfg *Config) (*db.DB, error) {
-	// Инициализация хранилища
-	bd, err := db.New(utils.FromPtr(cfg.DB))
+func initDB(ctx context.Context, cfg *Config, logger *zap.Logger) (*db.DB, error) {
+	bd, err := db.New(utils.FromPtr(cfg.DB), logger)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "cannot create application"))
+		logger.Error("Ошибка создания базы данных", zap.Error(err))
+		return nil, errors.Wrap(err, "cannot create application")
 	}
 
 	err = bd.DB.Start(ctx)
 	if err != nil {
+		logger.Error("Ошибка запуска базы данных", zap.Error(err))
 		return nil, err
 	}
+	logger.Info("База данных успешно инициализирована")
 
 	return bd, err
 }
