@@ -14,7 +14,6 @@ type Treatment struct {
 	EndAt       time.Time `json:"endAt" validate:"required"`
 	Comment     string    `json:"comment" validate:"required"`
 	IsActive    int64     `json:"isActive" validate:"required"`
-	Age         float64   `json:"age" validate:"required"`
 	Weight      float64   `json:"weight" validate:"gte=0"`      // Вес животного в кг, >= 0
 	Temperature float64   `json:"temperature" validate:"gte=0"` // Температура тела животного, >= 0
 
@@ -33,7 +32,6 @@ type TreatmentDetail struct {
 	EndAt       time.Time `json:"endAt" validate:"required"`
 	Comment     string    `json:"comment" validate:"required"`
 	IsActive    int64     `json:"isActive" validate:"required"`
-	Age         float64   `json:"age" validate:"required"`
 	Weight      float64   `json:"weight" validate:"gte=0"`      // Вес животного в кг, >= 0
 	Temperature float64   `json:"temperature" validate:"gte=0"` // Температура тела животного, >= 0
 

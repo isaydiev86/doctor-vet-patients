@@ -1,8 +1,6 @@
 package transport
 
 import (
-	"context"
-
 	"doctor-vet-patients/internal/dto"
 	"doctor-vet-patients/internal/service"
 	"doctor-vet-patients/transport/models"
@@ -25,8 +23,6 @@ import (
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/patient [post]
 func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
-	ctx := context.Background()
-
 	var patient models.Patient
 	if err := c.BodyParser(&patient); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
@@ -37,7 +33,7 @@ func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
 	}
 
 	// Получаем пациентов через сервис
-	err := svc.CreatePatient(ctx, getDtoPatientOfApi(patient))
+	err := svc.CreatePatient(c.Context(), getDtoPatientOfApi(patient))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,

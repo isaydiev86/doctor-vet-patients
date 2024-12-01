@@ -1,7 +1,6 @@
 package transport
 
 import (
-	"context"
 	"strconv"
 
 	"doctor-vet-patients/internal/dto"
@@ -18,13 +17,12 @@ import (
 //	@Tags			treatment
 //	@Accept			json
 //	@Produce		json
+//	@Param			id	path		int						true	"ID treatment"
 //	@Success		200	{array}		models.TreatmentDetail	"Детали лечения"
-//	@Failure		400	{object}	models.Response	"Ошибка запроса"
-//	@Failure		500	{object}	models.Response	"Внутренняя ошибка сервера"
+//	@Failure		400	{object}	models.Response			"Ошибка запроса"
+//	@Failure		500	{object}	models.Response			"Внутренняя ошибка сервера"
 //	@Router			/treatment/{id} [get]
 func TreatmentHandler(c *fiber.Ctx, svc service.Service) error {
-	ctx := context.Background()
-
 	idParam := c.Params("id")
 
 	id, err := strconv.ParseInt(idParam, 10, 64)
@@ -36,7 +34,7 @@ func TreatmentHandler(c *fiber.Ctx, svc service.Service) error {
 		})
 	}
 
-	treatmentsDto, err := svc.GetTreatment(ctx, id)
+	treatmentsDto, err := svc.GetTreatment(c.Context(), id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
@@ -56,7 +54,6 @@ func TreatmentHandler(c *fiber.Ctx, svc service.Service) error {
 		EndAt:         treatmentsDto.EndAt,
 		Comment:       treatmentsDto.Comment,
 		IsActive:      treatmentsDto.IsActive,
-		Age:           treatmentsDto.Age,
 		Weight:        treatmentsDto.Weight,
 		Temperature:   treatmentsDto.Temperature,
 		Patient:       getPatientOfDTO(treatmentsDto.Patient),

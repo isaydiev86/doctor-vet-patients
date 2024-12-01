@@ -71,6 +71,15 @@
                 ],
                 "summary": "Получить детали лечения",
                 "operationId": "get_treatment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID treatment",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Детали лечения",
@@ -110,6 +119,38 @@
                 ],
                 "summary": "Получить список лечений",
                 "operationId": "get_treatments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Фильтр по ФИО",
+                        "name": "fio",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Фильтр по кличке",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Фильтр по статусу",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Лимит записей (по умолчанию 10)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Смещение для пагинации (по умолчанию 0)",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Список лечений",
@@ -239,7 +280,6 @@
         "doctor-vet-patients_transport_models.Treatment": {
             "type": "object",
             "required": [
-                "age",
                 "beginAt",
                 "comment",
                 "createdAt",
@@ -252,9 +292,6 @@
                 "updatedAt"
             ],
             "properties": {
-                "age": {
-                    "type": "number"
-                },
                 "beginAt": {
                     "type": "string"
                 },
@@ -322,7 +359,6 @@
         "models.TreatmentDetail": {
             "type": "object",
             "required": [
-                "age",
                 "beginAt",
                 "comment",
                 "createdAt",
@@ -335,9 +371,6 @@
                 "updatedAt"
             ],
             "properties": {
-                "age": {
-                    "type": "number"
-                },
                 "beginAt": {
                     "type": "string"
                 },

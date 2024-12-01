@@ -6,8 +6,8 @@ import (
 	"doctor-vet-patients/internal/dto"
 )
 
-func (s *Service) GetTreatments(ctx context.Context) ([]*dto.Treatment, error) {
-	list, err := s.svc.DB.GetTreatments(ctx)
+func (s *Service) GetTreatments(ctx context.Context, filter dto.TreatmentFilters) ([]*dto.Treatment, error) {
+	list, err := s.svc.DB.GetTreatments(ctx, filter)
 	if err != nil {
 		return nil, err
 	}

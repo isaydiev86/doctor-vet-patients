@@ -1,8 +1,6 @@
 package transport
 
 import (
-	"context"
-
 	"doctor-vet-patients/internal/dto"
 	"doctor-vet-patients/internal/service"
 	"doctor-vet-patients/transport/models"
@@ -17,16 +15,30 @@ import (
 //	@Tags			treatment
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{array}		models.Treatment	"Список лечений"
-//	@Failure		400	{object}	models.Response	"Ошибка запроса"
-//	@Failure		500	{object}	models.Response	"Внутренняя ошибка сервера"
+//	@Param			fio		query		string				false	"Фильтр по ФИО"
+//	@Param			name	query		string				false	"Фильтр по кличке"
+//	@Param			status	query		string				false	"Фильтр по статусу"
+//	@Param			limit	query		integer				false	"Лимит записей (по умолчанию 10)"
+//	@Param			offset	query		integer				false	"Смещение для пагинации (по умолчанию 0)"
+//	@Success		200		{array}		models.Treatment	"Список лечений"
+//	@Failure		400		{object}	models.Response		"Ошибка запроса"
+//	@Failure		500		{object}	models.Response		"Внутренняя ошибка сервера"
 //	@Router			/treatments [get]
 func TreatmentsHandler(c *fiber.Ctx, svc service.Service) error {
-	ctx := context.Background()
+	fio := c.Query("fio", "")
+	name := c.Query("name", "")
+	status := c.Query("status", "")
+	limit := c.QueryInt("limit", 10)
+	offset := c.QueryInt("offset", 0)
 
-	/// TODO учесть фильтры (по фио, по кличке(name), по статусу, лимит и офсет, дате)
-
-	treatmentsData, err := svc.GetTreatments(ctx)
+	filters := dto.TreatmentFilters{
+		Fio:    fio,
+		Name:   name,
+		Status: status,
+		Limit:  limit,
+		Offset: offset,
+	}
+	treatmentsData, err := svc.GetTreatments(c.Context(), filters)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
@@ -48,7 +60,6 @@ func TreatmentsHandler(c *fiber.Ctx, svc service.Service) error {
 			EndAt:       p.EndAt,
 			Comment:     p.Comment,
 			IsActive:    p.IsActive,
-			Age:         p.Age,
 			Weight:      p.Weight,
 			Temperature: p.Temperature,
 			Patient:     getPatientOfDTO(p.Patient),

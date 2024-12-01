@@ -75,8 +75,6 @@ definitions:
     type: object
   doctor-vet-patients_transport_models.Treatment:
     properties:
-      age:
-        type: number
       beginAt:
         type: string
       comment:
@@ -110,7 +108,6 @@ definitions:
         minimum: 0
         type: number
     required:
-    - age
     - beginAt
     - comment
     - createdAt
@@ -133,8 +130,6 @@ definitions:
     type: object
   models.TreatmentDetail:
     properties:
-      age:
-        type: number
       beginAt:
         type: string
       comment:
@@ -173,7 +168,6 @@ definitions:
         minimum: 0
         type: number
     required:
-    - age
     - beginAt
     - comment
     - createdAt
@@ -228,6 +222,12 @@ paths:
       - application/json
       description: Возвращает детали  лечения
       operationId: get_treatment
+      parameters:
+      - description: ID treatment
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -254,6 +254,27 @@ paths:
       - application/json
       description: Возвращает список всех лечений
       operationId: get_treatments
+      parameters:
+      - description: Фильтр по ФИО
+        in: query
+        name: fio
+        type: string
+      - description: Фильтр по кличке
+        in: query
+        name: name
+        type: string
+      - description: Фильтр по статусу
+        in: query
+        name: status
+        type: string
+      - description: Лимит записей (по умолчанию 10)
+        in: query
+        name: limit
+        type: integer
+      - description: Смещение для пагинации (по умолчанию 0)
+        in: query
+        name: offset
+        type: integer
       produces:
       - application/json
       responses:
