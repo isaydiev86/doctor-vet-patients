@@ -11,6 +11,51 @@
     },
     "paths": {
         "/patient": {
+            "put": {
+                "description": "Редактирование  пациента",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Редактирование  пациента",
+                "operationId": "update_patient",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/doctor-vet-patients_transport_models.Patient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Создать нового пациента",
                 "consumes": [
@@ -213,7 +258,7 @@
                     "type": "string"
                 },
                 "gender": {
-                    "description": "Пол животного, \"male\" или \"female\"",
+                    "description": "Пол животного, \"мужской\" или \"женский\"",
                     "type": "string",
                     "enum": [
                         "мужской",
@@ -233,7 +278,7 @@
                     "type": "string"
                 },
                 "phone": {
-                    "description": "Телефон в формате E.164, обязательно",
+                    "description": "Телефон обязательно",
                     "type": "string"
                 }
             }

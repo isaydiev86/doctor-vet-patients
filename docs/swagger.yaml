@@ -18,7 +18,7 @@ definitions:
         description: ФИО пациента, обязательно
         type: string
       gender:
-        description: Пол животного, "male" или "female"
+        description: Пол животного, "мужской" или "женский"
         enum:
         - мужской
         - женский
@@ -33,7 +33,7 @@ definitions:
         description: Имя животного, обязательно
         type: string
       phone:
-        description: Телефон в формате E.164, обязательно
+        description: Телефон обязательно
         type: string
     required:
     - address
@@ -214,6 +214,36 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: Создать нового пациента
+      tags:
+      - patients
+    put:
+      consumes:
+      - application/json
+      description: Редактирование  пациента
+      operationId: update_patient
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Редактирование  пациента
       tags:
       - patients
   /treatment/{id}:
