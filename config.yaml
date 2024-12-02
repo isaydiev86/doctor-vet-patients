@@ -11,3 +11,10 @@ db:
   max_open_conns: 25
   conn_max_lifetime: 5m
   ssl: false
+
+server:
+  host: "localhost"
+  port: 3000
+  idle_timeout: 5m
+  read_timeout: 10s
+  write_timeout: 10s

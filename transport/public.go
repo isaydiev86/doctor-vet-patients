@@ -6,12 +6,14 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-// RegisterRoutes @title			Patient Service API
+// RegisterPublicRoutes @title			Patient Service API
 // @version		1.0
 // @description	API для работы с пациентами и их данными
 // @schemes		http
 // @termsOfService	http://swagger.io.terms/
-func RegisterRoutes(app *fiber.App, svc service.Service) {
+func RegisterPublicRoutes(app *fiber.App, svc service.Service) {
+
+	/// TODO разделить на админ и общие
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
