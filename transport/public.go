@@ -17,18 +17,22 @@ func RegisterPublicRoutes(app *fiber.App, svc service.Service) {
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
-	app.Get("/treatments", func(c *fiber.Ctx) error {
-		return TreatmentsHandler(c, svc)
-	})
-
-	app.Get("/treatment/:id", func(c *fiber.Ctx) error {
-		return TreatmentHandler(c, svc)
-	})
-
 	app.Post("/patient", func(c *fiber.Ctx) error {
 		return PatientAddHandler(c, svc)
 	})
 	app.Put("/patient", func(c *fiber.Ctx) error {
 		return PatientUpdateHandler(c, svc)
 	})
+
+	app.Get("/treatments", func(c *fiber.Ctx) error {
+		return TreatmentsHandler(c, svc)
+	})
+	app.Get("/treatment/:id", func(c *fiber.Ctx) error {
+		return TreatmentHandler(c, svc)
+	})
+
+	app.Get("/reference", func(c *fiber.Ctx) error {
+		return ReferenceHandler(c, svc)
+	})
+
 }

@@ -67,6 +67,8 @@ func getQueryWithFilter(filter dto.TreatmentFilters) (string, []interface{}) {
 		args = append(args, filter.Status)
 	}
 
+	query += " ORDER BY t.created_at DESC"
+
 	query += " LIMIT $" + fmt.Sprint(len(args)+1) + " OFFSET $" + fmt.Sprint(len(args)+2)
 	args = append(args, filter.Limit, filter.Offset)
 

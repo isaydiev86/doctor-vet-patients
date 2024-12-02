@@ -56,3 +56,8 @@ const selectTreatmentDetailSQL = `
         GROUP BY 
             t.id, p.id;
 `
+const selectReferenceSQL = `
+	SELECT id, name, type
+	FROM reference
+	WHERE type = $1
+`
