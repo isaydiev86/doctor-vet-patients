@@ -6,11 +6,12 @@ type Relation struct {
 	DB Database
 }
 
-func New(svc Relation, logger *zap.Logger) *Service {
-	return &Service{svc: svc, Logger: logger}
+func New(svc Relation, logger *zap.Logger, keycloak *KeycloakService) *Service {
+	return &Service{svc: svc, Logger: logger, Keycloak: keycloak}
 }
 
 type Service struct {
-	svc    Relation
-	Logger *zap.Logger
+	svc      Relation
+	Logger   *zap.Logger
+	Keycloak *KeycloakService
 }

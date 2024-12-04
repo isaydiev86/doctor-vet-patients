@@ -18,3 +18,10 @@ server:
   idle_timeout: 5m
   read_timeout: 10s
   write_timeout: 10s
+
+keycloak:
+  url: "http://localhost:8080"
+  realm: "doctor-vet"
+  client_id: "dovtor_vet_client"
+  secret: "4DpiMsSSm03VdV7VwFUMg5F0gYz2NDPu"
+  rsa256: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2Ohoqxk7yeUcSy+pdUWMwOur9KgqwKQ6+sDHdFaL5zF0YjMvvr+Kkb+IOPZ8yXERI5kRZrZxKU+RD8G+I9WBjLqzfNZ7sFYJAOC6MX48/cRYxaiFnHxv/2S/C/0KxNS1WyyTjVMKijqaSHXdgeGPfR/4PaPlV7e8Y2KWZb+cdZ46NuWAijNi9BB/ugLq3+v1wgSUHgx2d/sdcEqKlYCuTH3ajwYfe6BuIjkuRZzq28A9LRaGu0ovPFQbvvmjhNUn4EgkN5eEZ45riXmfMez8nW0EOrHppQR1jc7FiiZf/lrFUWB0mwBJt2g3pEgsQ5iNTTJv8Vk1MJDREQ+jgJvuMQIDAQAB"

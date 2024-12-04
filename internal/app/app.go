@@ -16,8 +16,9 @@ import (
 )
 
 type Config struct {
-	DB  *dbutil.Config          `yaml:"db"`
-	Srv *transport.ServerConfig `yaml:"server"`
+	DB       *dbutil.Config          `yaml:"db"`
+	Srv      *transport.ServerConfig `yaml:"server"`
+	Keycloak *service.KeycloakConfig `yaml:"keycloak"`
 }
 
 func Run(ctx context.Context, cfg *Config) error {
@@ -42,7 +43,15 @@ func Run(ctx context.Context, cfg *Config) error {
 		return err
 	}
 
-	svc := service.New(service.Relation{DB: bd}, logger)
+	kcConfig := service.KeycloakConfig{
+		URL:      cfg.Keycloak.URL,
+		Realm:    cfg.Keycloak.Realm,
+		ClientID: cfg.Keycloak.ClientID,
+		Secret:   cfg.Keycloak.Secret,
+	}
+	keycloakService := service.NewKeycloakService(kcConfig)
+
+	svc := service.New(service.Relation{DB: bd}, logger, keycloakService)
 
 	err = initRouterPublic(cfg, svc)
 	if err != nil {
@@ -62,6 +71,9 @@ func initRouterPublic(cfg *Config, svc *service.Service) error {
 		ReadTimeout:  cfg.Srv.ReadTimeout,
 		WriteTimeout: cfg.Srv.WriteTimeout,
 	})
+
+	/// TODO сделать с учетом Middlewares
+	//middlewares.InitFiberMiddlewares(app, routes.InitPublicRoutes, routes.InitProtectedRoutes)
 
 	transport.RegisterPublicRoutes(app, utils.FromPtr(svc))
 

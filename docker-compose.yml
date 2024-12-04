@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.5
+    restart: always
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://db:5432/doctor_vet
+      - KC_DB_USERNAME=doctor_vet
+      - KC_DB_PASSWORD=doctor_vet
+      - KC_HTTP_ENABLED=true  # Включить HTTP (по умолчанию)
+      - KC_HTTPS_ENABLED=false # Отключить HTTPS
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    entrypoint: [ "bash", "-c", "/opt/keycloak/bin/kc.sh start --hostname-strict=false --http-relative-path=/auth" ]
+
   db:
     restart: always
     image: postgres:15
@@ -12,6 +32,7 @@ services:
       - POSTGRES_DB=doctor_vet
     ports:
       - "5432:5432"
+
   wait-for-migrations:
     image: busybox
     depends_on:
