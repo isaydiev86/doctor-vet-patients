@@ -5,10 +5,11 @@ import "time"
 type Prescription struct {
 	ID          int64
 	TreatmentID int64
-	Preparation string
-	Dose        string
+	Name        string
+	Dose        float64
 	Course      string
-	Amount      string
+	Category    string
+	Option      string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

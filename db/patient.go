@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"doctor-vet-patients/internal/dto"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"go.uber.org/zap"
 )
 

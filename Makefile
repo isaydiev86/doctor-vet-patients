@@ -22,6 +22,9 @@ migrate-up:
 migrate-down:
 	goose -dir $(MIGRATIONS_DIR) postgres "$(DB_URL)" down
 
+migrate-down-all:
+	goose -dir $(MIGRATIONS_DIR) postgres "$(DB_URL)" reset
+
 migrate-status:
 	goose -dir $(MIGRATIONS_DIR) postgres "$(DB_URL)" status
 

@@ -69,10 +69,11 @@ func getPrescriptionOfDTO(dto []dto.Prescription) []models.Prescription {
 		prescription[i] = models.Prescription{
 			ID:          p.ID,
 			TreatmentID: p.TreatmentID,
-			Preparation: p.Preparation,
+			Name:        p.Name,
 			Dose:        p.Dose,
 			Course:      p.Course,
-			Amount:      p.Amount,
+			Category:    p.Category,
+			Option:      p.Option,
 		}
 	}
 	return prescription

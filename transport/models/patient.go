@@ -2,7 +2,7 @@ package models
 
 // Patient представляет пациента и связанную с ним информацию.
 type Patient struct {
-	ID         int64   `json:"id" example:"1" validate:"required"`
+	ID         int64   `json:"id"`
 	Fio        string  `json:"fio"  validate:"required"`                         // ФИО пациента, обязательно
 	Phone      string  `json:"phone" validate:"required"`                        // Телефон обязательно
 	Address    string  `json:"address" validate:"required"`                      // Адрес проживания, обязательно

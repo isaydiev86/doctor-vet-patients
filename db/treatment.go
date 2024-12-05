@@ -139,10 +139,11 @@ func mapTreatmentDetailDBtoDTO(row *models.TreatmentDetailRow) *dto.TreatmentDet
 		item := dto.Prescription{
 			ID:          v.ID,
 			TreatmentID: v.TreatmentID,
-			Preparation: v.Preparation.String,
-			Dose:        v.Dose.String,
+			Name:        v.Name.String,
+			Dose:        v.Dose.Float64,
 			Course:      v.Course.String,
-			Amount:      v.Amount.String,
+			Category:    v.Category.String,
+			Option:      v.Option.String,
 			CreatedAt:   v.CreatedAt,
 			UpdatedAt:   v.UpdatedAt,
 		}

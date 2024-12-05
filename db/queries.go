@@ -36,10 +36,11 @@ const selectTreatmentDetailSQL = `
                     json_build_object(
                         'id', pr.id,
                         'treatment_id', pr.treatment_id,
-                        'preparation', pr.preparation,
+                        'name', pr.name,
                         'course', pr.course,
                         'dose', pr.dose,
-                        'amount', pr.amount,
+                        'category', pr.category,
+                        'option', pr.option,
                         'created_at', pr.created_at,
                         'updated_at', pr.updated_at
                     )
