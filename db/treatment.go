@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"doctor-vet-patients/db/models"
-	"doctor-vet-patients/internal/dto"
 	"github.com/georgysavva/scany/v2/pgxscan"
+	"github.com/isaydiev86/doctor-vet-patients/db/models"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 )
 
 func (db *DB) CreateTreatment(ctx context.Context, patientID int64) (int64, error) {

@@ -4,13 +4,13 @@ import (
 	"context"
 	"log"
 
-	"doctor-vet-patients/internal/app"
-	"doctor-vet-patients/internal/service"
-	"doctor-vet-patients/pkg/keycloak"
-	"doctor-vet-patients/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/isaydiev86/doctor-vet-patients/internal/app"
+	"github.com/isaydiev86/doctor-vet-patients/internal/service"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
 )
 
 func InitFiberMiddlewares(cfg *app.Config, app *fiber.App,
@@ -35,7 +35,7 @@ func InitFiberMiddlewares(cfg *app.Config, app *fiber.App,
 	initPublicRoutes(app)
 
 	tokenRetrospector := service.NewKeycloakService(utils.FromPtr(cfg.Keycloak))
-	app.Use(NewJwtMiddleware(tokenRetrospector))
+	app.Use(NewJwtMiddleware(tokenRetrospector, utils.FromPtr(cfg.Keycloak)))
 
 	// routes that require authentication/authorization
 	initProtectedRoutes(app)

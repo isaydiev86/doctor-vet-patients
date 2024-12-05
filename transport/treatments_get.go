@@ -1,10 +1,10 @@
 package transport
 
 import (
-	"doctor-vet-patients/internal/dto"
-	"doctor-vet-patients/internal/service"
-	"doctor-vet-patients/transport/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
+	"github.com/isaydiev86/doctor-vet-patients/internal/service"
+	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
 // TreatmentsHandler Получить список лечений

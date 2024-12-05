@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"doctor-vet-patients/internal/dto"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 )
 
 func (s *Service) GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error) {

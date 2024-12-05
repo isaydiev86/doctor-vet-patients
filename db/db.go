@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 
-	"doctor-vet-patients/pkg/dbutil"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/dbutil"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )

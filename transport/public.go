@@ -1,9 +1,9 @@
 package transport
 
 import (
-	"doctor-vet-patients/internal/service"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
+	"github.com/isaydiev86/doctor-vet-patients/internal/service"
 )
 
 // RegisterPublicRoutes @title			Patient Service API

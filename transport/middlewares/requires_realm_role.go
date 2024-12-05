@@ -1,9 +1,9 @@
 package middlewares
 
 import (
-	"doctor-vet-patients/pkg/keycloak"
 	"github.com/gofiber/fiber/v2"
 	golangJwt "github.com/golang-jwt/jwt/v5"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 )
 
 func NewRequiresRealmRole(role string) fiber.Handler {

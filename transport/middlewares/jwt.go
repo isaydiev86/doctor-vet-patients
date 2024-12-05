@@ -7,12 +7,12 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"doctor-vet-patients/internal/service"
-	"doctor-vet-patients/pkg/keycloak"
 	"github.com/Nerzal/gocloak/v13"
 	contribJwt "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	golangJwt "github.com/golang-jwt/jwt/v5"
+	"github.com/isaydiev86/doctor-vet-patients/internal/service"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 )
 
 type TokenRetrospector interface {

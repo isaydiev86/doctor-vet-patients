@@ -51,13 +51,13 @@ func (k *KeycloakService) Login(ctx context.Context, username, password string) 
 	return jwt.AccessToken, nil
 }
 
-//func (k *KeycloakService) RetrospectToken(ctx context.Context, accessToken string) (*gocloak.IntroSpectTokenResult, error) {
-//
-//	client := gocloak.NewClient(im.baseUrl)
-//
-//	rptResult, err := client.RetrospectToken(ctx, accessToken, im.restApiClientId, im.restApiClientSecret, im.realm)
-//	if err != nil {
-//		return nil, errors.Wrap(err, "unable to retrospect token")
-//	}
-//	return rptResult, nil
-//}
+func (k *KeycloakService) RetrospectToken(ctx context.Context, accessToken string) (*gocloak.IntroSpectTokenResult, error) {
+
+	client := gocloak.NewClient(k.Config.URL)
+
+	rptResult, err := client.RetrospectToken(ctx, accessToken, k.Config.ClientID, k.Config.Secret, k.Realm)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to retrospect token")
+	}
+	return rptResult, nil
+}

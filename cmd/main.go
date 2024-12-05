@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"doctor-vet-patients/internal/app"
+	"github.com/isaydiev86/doctor-vet-patients/internal/app"
 	"gopkg.in/yaml.v3"
 )
 

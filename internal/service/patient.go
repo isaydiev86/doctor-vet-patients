@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"doctor-vet-patients/db"
-	"doctor-vet-patients/internal/dto"
+	"github.com/isaydiev86/doctor-vet-patients/db"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"github.com/pkg/errors"
 )
 

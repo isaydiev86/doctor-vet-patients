@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"log"
 
-	"doctor-vet-patients/db"
-	"doctor-vet-patients/internal/service"
-	"doctor-vet-patients/pkg/dbutil"
-	"doctor-vet-patients/pkg/utils"
-	"doctor-vet-patients/transport"
 	"github.com/gofiber/fiber/v2"
+	"github.com/isaydiev86/doctor-vet-patients/db"
+	"github.com/isaydiev86/doctor-vet-patients/internal/service"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/dbutil"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
+	"github.com/isaydiev86/doctor-vet-patients/transport"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )

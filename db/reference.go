@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"doctor-vet-patients/db/models"
-	"doctor-vet-patients/internal/dto"
 	"github.com/georgysavva/scany/v2/pgxscan"
+	"github.com/isaydiev86/doctor-vet-patients/db/models"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"go.uber.org/zap"
 )
 
