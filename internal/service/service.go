@@ -1,6 +1,8 @@
 package service
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+)
 
 type Relation struct {
 	DB Database

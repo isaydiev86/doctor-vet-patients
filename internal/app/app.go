@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/db"
@@ -21,7 +24,9 @@ type Config struct {
 	Keycloak *service.KeycloakConfig `yaml:"keycloak"`
 }
 
-func Run(ctx context.Context, cfg *Config) error {
+func Run(cfg *Config) error {
+	ctx := context.Background()
+
 	logger, err := initLogger()
 	if err != nil {
 		log.Printf("Не удалось инициализировать логгер: %v\n", err)
@@ -42,6 +47,12 @@ func Run(ctx context.Context, cfg *Config) error {
 		logger.Error("cannot create application", zap.Error(err))
 		return err
 	}
+	defer func(bd *db.DB, ctx context.Context) {
+		err = bd.Stop(ctx)
+		if err != nil {
+			logger.Error("cannot close db", zap.Error(err))
+		}
+	}(bd, ctx)
 
 	kcConfig := service.KeycloakConfig{
 		URL:      cfg.Keycloak.URL,
@@ -59,9 +70,20 @@ func Run(ctx context.Context, cfg *Config) error {
 		return err
 	}
 
-	logger.Info("Приложение запустилось!")
+	//waiting(logger)
 
 	return nil
+}
+
+func waiting(logger *zap.Logger) {
+	logger.Info("App started!")
+
+	wait := make(chan os.Signal, 1)
+	signal.Notify(wait, os.Interrupt, syscall.SIGTERM)
+
+	<-wait
+
+	logger.Info("App is stopping...")
 }
 
 func initRouterPublic(cfg *Config, svc *service.Service) error {

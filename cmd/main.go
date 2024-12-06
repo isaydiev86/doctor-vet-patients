@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
@@ -11,14 +10,13 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
 
 	cfg, err := initConfig()
 	if err != nil {
 		log.Fatalf("Не удалось инициализировать конфигурацию: %v", err)
 	}
 
-	err = app.Run(ctx, cfg)
+	err = app.Run(cfg)
 	if err != nil {
 		log.Fatalf("Не удалось запустить приложение: %v", err)
 	}
