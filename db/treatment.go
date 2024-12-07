@@ -8,6 +8,8 @@ import (
 	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/isaydiev86/doctor-vet-patients/db/models"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
+	"go.uber.org/zap"
 )
 
 func (db *DB) CreateTreatment(ctx context.Context, patientID int64) (int64, error) {
@@ -28,51 +30,39 @@ func (db *DB) CreateTreatment(ctx context.Context, patientID int64) (int64, erro
 func (db *DB) GetTreatments(ctx context.Context, filter dto.TreatmentFilters) ([]*dto.Treatment, error) {
 	var treatments []*models.TreatmentRow
 
-	query, args := getQueryWithFilter(filter)
+	query := `
+	SELECT
+		t.id, t.patient_id, t.doctor_id, t.temperature, t.status, t.created_at, t.updated_at, t.begin_at, t.end_at,
+		t.comment, t.is_active, t.weight,
+		p.id AS "patient.id", p.fio AS "patient.fio", p.phone AS "patient.phone",
+		p.age AS "patient.age", p.address AS "patient.address", p.animal AS "patient.animal", p.name AS "patient.name",
+		p.breed AS "patient.breed", p.gender AS "patient.gender", p.is_neutered AS "patient.is_neutered"
+	FROM treatment t
+	LEFT JOIN
+		 patient p ON t.patient_id = p.id
+	WHERE
+		($1::TEXT IS NULL OR p.fio ILIKE '%' || $1 || '%') AND
+		($2::TEXT IS NULL OR p.name ILIKE '%' || $2 || '%') AND
+		($3::TEXT IS NULL OR t.status = $3) AND 
+		($4::DATE IS NULL OR DATE(t.created_at) = $4::DATE)
+	ORDER BY
+		t.created_at DESC
+	LIMIT $5 OFFSET $6;`
 
-	err := pgxscan.Select(ctx, db.DB, &treatments, query, args...)
+	err := pgxscan.Select(ctx, db.DB, &treatments, query,
+		utils.NilIfEmpty(filter.Fio),
+		utils.NilIfEmpty(filter.Name),
+		utils.NilIfEmpty(filter.Status),
+		utils.NilIfEmpty(filter.Date),
+		filter.Limit,
+		filter.Offset,
+	)
 	if err != nil {
+		db.logger.Error("db on GetTreatments", zap.Error(err))
 		return nil, fmt.Errorf("failed to fetch treatments: %w", err)
 	}
 
 	return mapTreatmentDBtoDTO(treatments), nil
-}
-
-func getQueryWithFilter(filter dto.TreatmentFilters) (string, []interface{}) {
-	query := `
-		SELECT 
-            t.id, t.patient_id, t.doctor_id, t.temperature, t.status, t.created_at, t.updated_at, t.begin_at, t.end_at, 
-            t.comment, t.is_active, t.weight,
-            p.id AS "patient.id", p.fio AS "patient.fio", p.phone AS "patient.phone",
-            p.age AS "patient.age", p.address AS "patient.address", p.animal AS "patient.animal", p.name AS "patient.name", 
-            p.breed AS "patient.breed", p.gender AS "patient.gender", p.is_neutered AS "patient.is_neutered"
-        FROM 
-            treatment t
-        LEFT JOIN 
-            patient p ON t.patient_id = p.id
-        WHERE 1=1`
-
-	var args []interface{}
-
-	if filter.Fio != "" {
-		query += " AND p.fio ILIKE $1"
-		args = append(args, "%"+filter.Fio+"%")
-	}
-	if filter.Name != "" {
-		query += " AND p.name ILIKE $" + fmt.Sprint(len(args)+1)
-		args = append(args, "%"+filter.Name+"%")
-	}
-	if filter.Status != "" {
-		query += " AND t.status = $" + fmt.Sprint(len(args)+1)
-		args = append(args, filter.Status)
-	}
-
-	query += " ORDER BY t.created_at DESC"
-
-	query += " LIMIT $" + fmt.Sprint(len(args)+1) + " OFFSET $" + fmt.Sprint(len(args)+2)
-	args = append(args, filter.Limit, filter.Offset)
-
-	return query, args
 }
 
 func mapTreatmentDBtoDTO(rows []*models.TreatmentRow) []*dto.Treatment {

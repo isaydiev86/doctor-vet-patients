@@ -2,7 +2,7 @@ package transport
 
 import "time"
 
-type ServerConfig struct {
+type Config struct {
 	Host         string        `yaml:"host"`
 	Port         int           `yaml:"port"`
 	IdleTimeout  time.Duration `yaml:"idle_timeout"`

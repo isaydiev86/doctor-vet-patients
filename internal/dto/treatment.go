@@ -43,6 +43,7 @@ type TreatmentFilters struct {
 	Fio    string
 	Name   string
 	Status string
+	Date   string
 	Limit  int
 	Offset int
 }

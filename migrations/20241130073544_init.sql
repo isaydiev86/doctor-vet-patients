@@ -30,10 +30,10 @@ CREATE TABLE IF NOT EXISTS treatment (
     doctor_id   UUID,
     temperature FLOAT,
     status      VARCHAR(50),
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    begin_at    TIMESTAMP,
-    end_at      TIMESTAMP,
+    created_at  timestamptz    default now()  not null,
+    updated_at  timestamptz    default now()  not null,
+    begin_at    timestamptz,
+    end_at      timestamptz,
     comment     TEXT,
     is_active   INT NOT NULL DEFAULT 1,
     weight      FLOAT
@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS prescription (
     course          VARCHAR(100) NOT NULL,
     category        VARCHAR(100),
     option          VARCHAR(255),
-    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at      timestamptz    default now()  not null,
+    updated_at      timestamptz    default now()  not null
 );
 
 COMMENT ON TABLE prescription IS 'Препараты которые были сделаны или назначены врачом';

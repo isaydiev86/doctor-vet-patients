@@ -36,3 +36,28 @@ func ValidNullFloat64(i float64) sql.NullFloat64 { return sql.NullFloat64{Float6
 func ValidInt64ToString(value int64) string {
 	return strconv.FormatInt(value, 10)
 }
+
+// NilIfEmpty проверяет значение на "пустоту" и возвращает nil, если оно пустое.
+func NilIfEmpty(value interface{}) interface{} {
+	switch v := value.(type) {
+	case string:
+		if v == "" {
+			return nil
+		}
+	case int, int8, int16, int32, int64:
+		if v == 0 {
+			return nil
+		}
+	case uint, uint8, uint16, uint32, uint64:
+		if v == 0 {
+			return nil
+		}
+	case float32, float64:
+		if v == 0.0 {
+			return nil
+		}
+	case nil:
+		return nil
+	}
+	return value
+}

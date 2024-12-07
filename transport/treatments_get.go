@@ -18,6 +18,7 @@ import (
 //	@Param			fio		query		string				false	"Фильтр по ФИО"
 //	@Param			name	query		string				false	"Фильтр по кличке"
 //	@Param			status	query		string				false	"Фильтр по статусу"
+//	@Param			date	query		string				false	"Фильтр по дате создания"
 //	@Param			limit	query		integer				false	"Лимит записей (по умолчанию 10)"
 //	@Param			offset	query		integer				false	"Смещение для пагинации (по умолчанию 0)"
 //	@Success		200		{array}		models.Treatment	"Список лечений"
@@ -25,18 +26,13 @@ import (
 //	@Failure		500		{object}	models.Response		"Внутренняя ошибка сервера"
 //	@Router			/treatments [get]
 func TreatmentsHandler(c *fiber.Ctx, svc service.Service) error {
-	fio := c.Query("fio", "")
-	name := c.Query("name", "")
-	status := c.Query("status", "")
-	limit := c.QueryInt("limit", 10)
-	offset := c.QueryInt("offset", 0)
-
 	filters := dto.TreatmentFilters{
-		Fio:    fio,
-		Name:   name,
-		Status: status,
-		Limit:  limit,
-		Offset: offset,
+		Fio:    c.Query("fio"),
+		Name:   c.Query("name"),
+		Status: c.Query("status"),
+		Date:   c.Query("date"),
+		Limit:  c.QueryInt("limit", 10),
+		Offset: c.QueryInt("offset", 0),
 	}
 	treatmentsData, err := svc.GetTreatments(c.Context(), filters)
 	if err != nil {

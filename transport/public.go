@@ -35,22 +35,8 @@ func RegisterPublicRoutes(app *fiber.App, svc service.Service) {
 		return ReferenceHandler(c, svc)
 	})
 
-	/// TODO пока не работает...
 	app.Post("/login", func(c *fiber.Ctx) error {
-		var credentials struct {
-			Username string `json:"username"`
-			Password string `json:"password"`
-		}
-		if err := c.BodyParser(&credentials); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid payload"})
-		}
-
-		token, err := svc.Keycloak.Login(c.Context(), credentials.Username, credentials.Password)
-		if err != nil {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid credentials"})
-		}
-
-		return c.JSON(fiber.Map{"access_token": token})
+		return LoginHandler(c, svc)
 	})
 
 }
