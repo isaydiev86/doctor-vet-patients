@@ -1,5 +1,5 @@
 definitions:
-  doctor-vet-patients_transport_models.Patient:
+  github_com_isaydiev86_doctor-vet-patients_transport_models.Patient:
     properties:
       address:
         description: Адрес проживания, обязательно
@@ -24,7 +24,6 @@ definitions:
         - женский
         type: string
       id:
-        example: 1
         type: integer
       isNeutered:
         description: Информация о стерилизации
@@ -41,39 +40,39 @@ definitions:
     - breed
     - fio
     - gender
-    - id
     - name
     - phone
     type: object
-  doctor-vet-patients_transport_models.Prescription:
+  github_com_isaydiev86_doctor-vet-patients_transport_models.Prescription:
     properties:
-      amount:
+      category:
         type: string
       course:
         type: string
       createdAt:
         type: string
       dose:
-        type: string
+        type: number
       id:
         type: integer
-      preparation:
+      name:
+        type: string
+      option:
         type: string
       treatmentId:
         type: integer
       updatedAt:
         type: string
     required:
-    - amount
     - course
     - createdAt
     - dose
     - id
-    - preparation
+    - name
     - treatmentId
     - updatedAt
     type: object
-  doctor-vet-patients_transport_models.Treatment:
+  github_com_isaydiev86_doctor-vet-patients_transport_models.Treatment:
     properties:
       beginAt:
         type: string
@@ -91,7 +90,7 @@ definitions:
         type: integer
       patient:
         allOf:
-        - $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
+        - $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Patient'
         description: инфа пациента
       patientId:
         type: integer
@@ -118,6 +117,55 @@ definitions:
     - patientId
     - status
     - updatedAt
+    type: object
+  github_com_isaydiev86_doctor-vet-patients_transport_models.User:
+    properties:
+      fio:
+        type: string
+      id:
+        type: integer
+      role:
+        type: string
+      userId:
+        type: string
+    required:
+    - fio
+    - id
+    - role
+    - userId
+    type: object
+  models.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.LoginResponse:
+    properties:
+      accessToken:
+        type: string
+      name:
+        type: string
+      refreshToken:
+        type: string
+      role:
+        type: string
+      userId:
+        type: string
+    type: object
+  models.RefResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - id
+    - name
+    - type
     type: object
   models.Response:
     properties:
@@ -146,14 +194,14 @@ definitions:
         type: integer
       patient:
         allOf:
-        - $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
+        - $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Patient'
         description: инфа пациента
       patientId:
         type: integer
       prescriptions:
         description: список лечения
         items:
-          $ref: '#/definitions/doctor-vet-patients_transport_models.Prescription'
+          $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Prescription'
         type: array
       status:
         type: string
@@ -181,10 +229,38 @@ definitions:
     type: object
 info:
   contact: {}
-  description: API для работы с пациентами и их данными
-  termsOfService: http://swagger.io.terms/
-  version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация
+      operationId: auth
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.LoginResponse'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Авторизация
+      tags:
+      - auth
   /patient:
     post:
       consumes:
@@ -197,7 +273,7 @@ paths:
         name: Form
         required: true
         schema:
-          $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
+          $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Patient'
       produces:
       - application/json
       responses:
@@ -227,7 +303,7 @@ paths:
         name: Form
         required: true
         schema:
-          $ref: '#/definitions/doctor-vet-patients_transport_models.Patient'
+          $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Patient'
       produces:
       - application/json
       responses:
@@ -246,6 +322,38 @@ paths:
       summary: Редактирование  пациента
       tags:
       - patients
+  /reference:
+    get:
+      consumes:
+      - application/json
+      description: Получить список справочника
+      operationId: get_reference
+      parameters:
+      - description: тип справочника
+        in: query
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список справочника
+          schema:
+            items:
+              $ref: '#/definitions/models.RefResponse'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Получить список справочника
+      tags:
+      - reference
   /treatment/{id}:
     get:
       consumes:
@@ -297,6 +405,10 @@ paths:
         in: query
         name: status
         type: string
+      - description: Фильтр по дате создания
+        in: query
+        name: date
+        type: string
       - description: Лимит записей (по умолчанию 10)
         in: query
         name: limit
@@ -312,7 +424,7 @@ paths:
           description: Список лечений
           schema:
             items:
-              $ref: '#/definitions/doctor-vet-patients_transport_models.Treatment'
+              $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Treatment'
             type: array
         "400":
           description: Ошибка запроса
@@ -325,6 +437,35 @@ paths:
       summary: Получить список лечений
       tags:
       - treatment
-schemes:
-- http
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список пользователей
+      operationId: get_users
+      parameters:
+      - description: Фильтр по role
+        in: query
+        name: role
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список пользователей
+          schema:
+            items:
+              $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.User'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Получить список пользователей
+      tags:
+      - users
 swagger: "2.0"

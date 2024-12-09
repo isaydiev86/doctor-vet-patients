@@ -16,4 +16,6 @@ type Services interface {
 	UpdatePatient(ctx context.Context, patient dto.Patient) error
 
 	GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error)
+
+	GetUsers(ctx context.Context, filter dto.UserFilters) ([]*dto.User, error)
 }

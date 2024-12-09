@@ -1,9 +1,8 @@
 package models
 
 type User struct {
-	ID     string `db:"id"`
-	UserID string `db:"user_id"` // айди из кейклоака
+	ID     int64  `db:"id"`
+	UserID string `db:"user_id"` // айди из keycloak
 	Fio    string `db:"fio"`
-	Phone  string `db:"phone"`
-	Role   string `db:"role"` // роль задачется в кейклоаке
+	Role   string `db:"role"` // роль задается в keycloak
 }

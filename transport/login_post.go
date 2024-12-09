@@ -16,11 +16,11 @@ import (
 //	@Accept			json
 //	@Produce		json
 //
-//	@Param			Form	body		models.LoginRequest	true	"Запрос"
+//	@Param			Form	body		models.LoginRequest		true	"Запрос"
 //
 //	@Success		200		{object}	models.LoginResponse	"Успешный ответ"
-//	@Failure		400		{object}	models.Response	"Ошибка запроса"
-//	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
+//	@Failure		400		{object}	models.Response			"Ошибка запроса"
+//	@Failure		500		{object}	models.Response			"Внутренняя ошибка сервера"
 //	@Router			/login [post]
 func LoginHandler(c *fiber.Ctx, svc service.Service) error {
 	var login models.LoginRequest

@@ -39,4 +39,8 @@ func RegisterPublicRoutes(app *fiber.App, svc service.Service) {
 		return LoginHandler(c, svc)
 	})
 
+	app.Get("/users", func(c *fiber.Ctx) error {
+		return UserHandler(c, svc)
+	})
+
 }

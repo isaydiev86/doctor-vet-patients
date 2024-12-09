@@ -108,9 +108,6 @@ CREATE INDEX idx_symptom_preparation ON symptom_relation_preparation USING btree
 
 
 -- +goose Down
-ALTER TABLE relation DROP CONSTRAINT relation_reference_id_fkey;
-ALTER TABLE relation DROP CONSTRAINT relation_preparation_id_fkey;
-ALTER TABLE relation DROP CONSTRAINT relation_preliminary_diagnosis_id_fkey;
 DROP TABLE IF EXISTS reference;
 DROP TABLE IF EXISTS preparation;
 DROP TABLE IF EXISTS preliminary_diagnosis;

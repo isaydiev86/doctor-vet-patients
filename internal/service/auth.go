@@ -28,6 +28,19 @@ func (s *Service) Login(ctx context.Context, login dto.LoginRequest) (*dto.Login
 		return nil, err
 	}
 
+	// проверить по userID - есть ли такой в бд, если нету создать
+	exist, err := s.svc.DB.UserExists(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !exist {
+		err = s.svc.DB.CreateUser(ctx, userID, name, role)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return mapKeycloakToDTO(jwt, userID, name, role), err
 }
 
