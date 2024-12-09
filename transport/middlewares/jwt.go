@@ -11,7 +11,6 @@ import (
 	contribJwt "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	golangJwt "github.com/golang-jwt/jwt/v5"
-	"github.com/isaydiev86/doctor-vet-patients/internal/service"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 )
 
@@ -19,7 +18,7 @@ type TokenRetrospector interface {
 	RetrospectToken(ctx context.Context, accessToken string) (*gocloak.IntroSpectTokenResult, error)
 }
 
-func NewJwtMiddleware(tokenRetrospector TokenRetrospector, cfg service.KeycloakConfig) fiber.Handler {
+func NewJwtMiddleware(tokenRetrospector TokenRetrospector, cfg keycloak.Config) fiber.Handler {
 	publicKey, err := parseKeycloakRSAPublicKey(cfg.Rsa256)
 	if err != nil {
 		panic(err)

@@ -3,16 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
+	"github.com/isaydiev86/doctor-vet-patients/config"
 	"github.com/isaydiev86/doctor-vet-patients/internal/app"
 	"go.uber.org/zap"
-	"gopkg.in/yaml.v3"
 )
 
 func main() {
 
-	cfg, err := initConfig()
+	cfg, err := config.New()
 	if err != nil {
 		log.Fatalf("Не удалось инициализировать конфигурацию: %v", err)
 	}
@@ -34,20 +33,4 @@ func initLogger() (*zap.Logger, error) {
 		return nil, fmt.Errorf("ошибка инициализации логгера: %w", err)
 	}
 	return logger, nil
-}
-
-func initConfig() (*app.Config, error) {
-	data, err := os.ReadFile("config.yaml")
-	if err != nil {
-		return nil, fmt.Errorf("ошибка чтения файла: %w", err)
-	}
-
-	var config app.Config
-
-	err = yaml.Unmarshal(data, &config)
-	if err != nil {
-		return nil, fmt.Errorf("ошибка парсинга YAML: %w", err)
-	}
-
-	return &config, nil
 }

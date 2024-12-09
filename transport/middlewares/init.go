@@ -7,12 +7,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"github.com/isaydiev86/doctor-vet-patients/internal/app"
+	"github.com/isaydiev86/doctor-vet-patients/config"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
 )
 
-func InitFiberMiddlewares(cfg *app.Config, app *fiber.App,
+func InitFiberMiddlewares(cfg *config.Config, app *fiber.App,
 	initPublicRoutes func(app *fiber.App),
 	initProtectedRoutes func(app *fiber.App)) {
 

@@ -13,33 +13,34 @@ import (
 // @termsOfService	http://swagger.io.terms/
 func RegisterPublicRoutes(app *fiber.App, svc service.Service) {
 
+	app.Get("/swagger/*", swagger.HandlerDefault)
 	/// TODO разделить на админ и общие
 
-	app.Get("/swagger/*", swagger.HandlerDefault)
+	grp := app.Group("/api/v1")
 
-	app.Post("/patient", func(c *fiber.Ctx) error {
+	grp.Post("/patient", func(c *fiber.Ctx) error {
 		return PatientAddHandler(c, svc)
 	})
-	app.Put("/patient", func(c *fiber.Ctx) error {
+	grp.Put("/patient", func(c *fiber.Ctx) error {
 		return PatientUpdateHandler(c, svc)
 	})
 
-	app.Get("/treatments", func(c *fiber.Ctx) error {
+	grp.Get("/treatments", func(c *fiber.Ctx) error {
 		return TreatmentsHandler(c, svc)
 	})
-	app.Get("/treatment/:id", func(c *fiber.Ctx) error {
+	grp.Get("/treatment/:id", func(c *fiber.Ctx) error {
 		return TreatmentHandler(c, svc)
 	})
 
-	app.Get("/reference", func(c *fiber.Ctx) error {
+	grp.Get("/reference", func(c *fiber.Ctx) error {
 		return ReferenceHandler(c, svc)
 	})
 
-	app.Post("/login", func(c *fiber.Ctx) error {
+	grp.Post("/login", func(c *fiber.Ctx) error {
 		return LoginHandler(c, svc)
 	})
 
-	app.Get("/users", func(c *fiber.Ctx) error {
+	grp.Get("/users", func(c *fiber.Ctx) error {
 		return UserHandler(c, svc)
 	})
 

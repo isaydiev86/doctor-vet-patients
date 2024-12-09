@@ -8,9 +8,9 @@ import (
 	"syscall"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/isaydiev86/doctor-vet-patients/config"
 	"github.com/isaydiev86/doctor-vet-patients/db"
 	"github.com/isaydiev86/doctor-vet-patients/internal/service"
-	"github.com/isaydiev86/doctor-vet-patients/pkg/dbutil"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/http_server"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
@@ -19,13 +19,7 @@ import (
 	"go.uber.org/zap"
 )
 
-type Config struct {
-	DB       *dbutil.Config    `yaml:"db"`
-	Srv      *transport.Config `yaml:"server"`
-	Keycloak *keycloak.Config  `yaml:"keycloak"`
-}
-
-func Run(cfg *Config, logger *zap.Logger) error {
+func Run(cfg *config.Config, logger *zap.Logger) error {
 	ctx := context.Background()
 
 	bd, err := initDB(ctx, cfg, logger)
@@ -58,6 +52,9 @@ func Run(cfg *Config, logger *zap.Logger) error {
 
 	transport.RegisterPublicRoutes(app, utils.FromPtr(svc))
 
+	/// TODO add keycloak middlewares
+	transport.RegisterAdminRoutes(app, utils.FromPtr(svc))
+
 	s := http_server.New(app, fmt.Sprintf("%s:%d", cfg.Srv.Host, cfg.Srv.Port))
 	defer s.Close()
 
@@ -65,6 +62,24 @@ func Run(cfg *Config, logger *zap.Logger) error {
 
 	return nil
 }
+
+//func (s *Server) Start(ctx context.Context) error {
+//	timeoutMw, err := fiberutil.TimeoutMiddleware(fiberutil.WithTimeoutConfig(s.cfg.Timeout))
+//	if err != nil {
+//		return errors.Wrap(err, "new timeout middleware")
+//	}
+//	s.Use(timeoutMw)
+//	s.Use(fiberutil.RequestIDMiddleware())
+//	s.Use(s.Wrap())
+//	metricsMiddleware, err := fiberutil.PrometheusMetricsMiddleware("", fiberutil.DefaultSubsystem)
+//	if err != nil {
+//		return errors.Wrap(err, "new metrics middleware")
+//	}
+//	s.Use(metricsMiddleware)
+//	s.Get("/v1/", s.getAllProducts)
+//	s.Post("/v1/calc-fee", s.postCalcFee)
+//	return s.Server.Start(ctx)
+//}
 
 func waiting(logger *zap.Logger) {
 	logger.Info("App started!")
@@ -77,7 +92,7 @@ func waiting(logger *zap.Logger) {
 	logger.Info("App is stopping...")
 }
 
-func initDB(ctx context.Context, cfg *Config, logger *zap.Logger) (*db.DB, error) {
+func initDB(ctx context.Context, cfg *config.Config, logger *zap.Logger) (*db.DB, error) {
 	bd, err := db.New(utils.FromPtr(cfg.DB), logger)
 	if err != nil {
 		logger.Error("Ошибка создания базы данных", zap.Error(err))
