@@ -1,6 +1,9 @@
 package keycloak
 
 import (
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/base64"
 	"fmt"
 	"strings"
 
@@ -90,4 +93,20 @@ func parseString(claims jwt.MapClaims, key string) (string, error) {
 		return "", fmt.Errorf("key %s is invalid", key)
 	}
 	return iss, nil
+}
+
+func parseKeycloakRSAPublicKey(base64Str string) (*rsa.PublicKey, error) {
+	buf, err := base64.StdEncoding.DecodeString(base64Str)
+	if err != nil {
+		return nil, err
+	}
+	parsedKey, err := x509.ParsePKIXPublicKey(buf)
+	if err != nil {
+		return nil, err
+	}
+	publicKey, ok := parsedKey.(*rsa.PublicKey)
+	if ok {
+		return publicKey, nil
+	}
+	return nil, fmt.Errorf("unexpected key type %T", publicKey)
 }

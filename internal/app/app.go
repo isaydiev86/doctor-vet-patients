@@ -52,8 +52,9 @@ func Run(cfg *config.Config, logger *zap.Logger) error {
 
 	transport.RegisterPublicRoutes(app, utils.FromPtr(svc))
 
-	/// TODO add keycloak middlewares
 	transport.RegisterAdminRoutes(app, utils.FromPtr(svc))
+
+	transport.RegisterPrivateRoutes(app, utils.FromPtr(svc), true)
 
 	s := http_server.New(app, fmt.Sprintf("%s:%d", cfg.Srv.Host, cfg.Srv.Port))
 	defer s.Close()

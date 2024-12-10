@@ -7,6 +7,7 @@ import (
 
 	"github.com/Nerzal/gocloak/v13"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
 	"github.com/pkg/errors"
 )
 
@@ -34,23 +35,41 @@ func New(config Config) *Service {
 	}
 }
 
-func (k *Service) Login(ctx context.Context, username, password string) (*gocloak.JWT, error) {
-	jwt, err := k.client.Login(ctx, k.Config.ClientID, k.Config.Secret, k.Realm, username, password)
+func (k *Service) ValidateToken(ctx context.Context, token string) (bool, error) {
+	_, err := k.client.RetrospectToken(ctx, token, k.Config.ClientID, k.Config.Secret, k.Realm)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (k *Service) GetUserRoles(token string) ([]string, error) {
+	_, claims, err := k.client.DecodeAccessToken(context.Background(), token, k.Realm)
 	if err != nil {
 		return nil, err
 	}
 
-	return jwt, nil
+	return parseRealmRoles(utils.FromPtr(claims)), nil
+}
+
+func (k *Service) Login(ctx context.Context, username, password string) (*gocloak.JWT, error) {
+	jw, err := k.client.Login(ctx, k.Config.ClientID, k.Config.Secret, k.Realm, username, password)
+	if err != nil {
+		return nil, err
+	}
+
+	return jw, nil
 }
 
 // RefreshToken refreshes the given token.
 func (k *Service) RefreshToken(ctx context.Context, refreshToken string) (*gocloak.JWT, error) {
-	jwt, err := k.client.RefreshToken(ctx, k.Config.ClientID, k.Config.Secret, k.Realm, refreshToken)
+	jw, err := k.client.RefreshToken(ctx, k.Config.ClientID, k.Config.Secret, k.Realm, refreshToken)
 	if err != nil {
 		return nil, err
 	}
 
-	return jwt, nil
+	return jw, nil
 }
 
 func (k *Service) GetUserByID(ctx context.Context, accessToken, userID string) (*gocloak.User, error) {
