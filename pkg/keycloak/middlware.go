@@ -13,7 +13,7 @@ type Response struct {
 	Description string `json:"description"`
 }
 
-func TokenValidationMiddleware(k *Service, logger *zap.Logger) fiber.Handler {
+func TokenValidationMiddleware(k *Service, logger Logger) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		authHeader := c.Get("Authorization")
 		if authHeader == "" {
@@ -54,7 +54,7 @@ func TokenValidationMiddleware(k *Service, logger *zap.Logger) fiber.Handler {
 	}
 }
 
-func RoleValidationMiddleware(k *Service, logger *zap.Logger, allowedRoles ...string) fiber.Handler {
+func RoleValidationMiddleware(k *Service, logger Logger, allowedRoles ...string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		authHeader := c.Get("Authorization")
 
