@@ -1,9 +1,8 @@
-package transport
+package public
 
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
-	"github.com/isaydiev86/doctor-vet-patients/internal/service"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
@@ -22,7 +21,7 @@ import (
 //	@Failure		400		{object}	models.Response			"Ошибка запроса"
 //	@Failure		500		{object}	models.Response			"Внутренняя ошибка сервера"
 //	@Router			/login [post]
-func LoginHandler(c *fiber.Ctx, svc service.Service) error {
+func (s *Server) LoginHandler(c *fiber.Ctx) error {
 	var login models.LoginRequest
 	if err := c.BodyParser(&login); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
@@ -40,7 +39,7 @@ func LoginHandler(c *fiber.Ctx, svc service.Service) error {
 		})
 	}
 
-	l, err := svc.Login(c.Context(), getDtoLoginOfApi(login))
+	l, err := s.svc.Login(c.Context(), getDtoLoginOfApi(login))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,

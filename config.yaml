@@ -12,13 +12,25 @@ db:
   conn_max_lifetime: 5m
   ssl: false
 
-server:
+public:
   host: "localhost"
   port: 3000
   idle_timeout: 5m
   read_timeout: 10s
   write_timeout: 10s
-
+private:
+  host: "localhost"
+  port: 3001
+  idle_timeout: 5m
+  read_timeout: 10s
+  write_timeout: 10s
+admin:
+  host: "localhost"
+  port: 3002
+  idle_timeout: 5m
+  read_timeout: 10s
+  write_timeout: 10s
+  
 keycloak:
   url: "http://localhost:8080/auth"
   realm: "doctor_vet"

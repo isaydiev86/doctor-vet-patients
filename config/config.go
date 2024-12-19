@@ -11,9 +11,11 @@ import (
 )
 
 type Config struct {
-	DB       *dbutil.Config    `yaml:"db"`
-	Srv      *transport.Config `yaml:"server"`
-	Keycloak *keycloak.Config  `yaml:"keycloak"`
+	DB       dbutil.Config    `yaml:"db"`
+	Public   transport.Config `yaml:"public"`
+	Private  transport.Config `yaml:"private"`
+	Admin    transport.Config `yaml:"admin"`
+	Keycloak keycloak.Config  `yaml:"keycloak"`
 }
 
 func New() (*Config, error) {
