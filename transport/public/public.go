@@ -2,12 +2,10 @@ package public
 
 import (
 	"context"
-	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
-	"github.com/isaydiev86/doctor-vet-patients/pkg/logger"
 	"github.com/isaydiev86/doctor-vet-patients/transport"
 )
 
@@ -17,13 +15,9 @@ import (
 // @schemes		http
 // @termsOfService	http://swagger.io.terms/
 
-func New(cfg transport.Config, svc Services) (*Server, error) {
-	logger, err := logger.New()
-	if err != nil {
-		log.Fatalf("Не удалось инициализировать логгер: %v\n", err)
-	}
+func New(cfg transport.Config, svc Services, log Logger) (*Server, error) {
 	s := Server{
-		log: logger,
+		log: log,
 		svc: svc,
 		cfg: cfg,
 	}
@@ -43,7 +37,7 @@ type Server struct {
 	cfg transport.Config
 }
 
-func (s *Server) Start(ctx context.Context) error {
+func (s *Server) Start(_ context.Context) error {
 	s.App.Get("/swagger/*", swagger.HandlerDefault)
 
 	grp := s.App.Group("/api/v1/public")
@@ -56,6 +50,9 @@ func (s *Server) Start(ctx context.Context) error {
 }
 
 func (s *Server) Stop(ctx context.Context) error {
-	s.log.Sync()
-	return s.App.Shutdown()
+	err := s.log.Sync()
+	if err != nil {
+		return err
+	}
+	return s.App.ShutdownWithContext(ctx)
 }

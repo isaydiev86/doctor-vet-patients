@@ -9,15 +9,18 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (s *Service) CreatePatient(ctx context.Context, patient dto.Patient) error {
-	return s.svc.DB.Tx(ctx, func(tx any) error {
+func (s *Service) CreatePatient(ctx context.Context, patient dto.Patient) (int64, error) {
+	var patientID int64
+
+	err := s.svc.DB.Tx(ctx, func(tx any) error {
 		txDB, ok := tx.(*db.DB)
 		if !ok {
 			return errors.New("failed to cast transaction to *dbutil.DB")
 		}
 
+		var err error
 		// Создаем пациента
-		patientID, err := txDB.CreatePatient(ctx, patient)
+		patientID, err = txDB.CreatePatient(ctx, patient)
 		if err != nil {
 			return fmt.Errorf("failed to create patient: %w", err)
 		}
@@ -30,6 +33,8 @@ func (s *Service) CreatePatient(ctx context.Context, patient dto.Patient) error 
 
 		return nil
 	})
+
+	return patientID, err
 }
 
 func (s *Service) UpdatePatient(ctx context.Context, patient dto.Patient) error {

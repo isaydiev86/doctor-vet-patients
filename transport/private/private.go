@@ -2,22 +2,16 @@ package private
 
 import (
 	"context"
-	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
-	"github.com/isaydiev86/doctor-vet-patients/pkg/logger"
 	"github.com/isaydiev86/doctor-vet-patients/transport"
 )
 
-func New(cfg transport.Config, svc Services, keycloak *keycloak.Service) (*Server, error) {
-	logger, err := logger.New()
-	if err != nil {
-		log.Fatalf("Не удалось инициализировать логгер: %v\n", err)
-	}
+func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Service) (*Server, error) {
 	s := Server{
-		log:      logger,
+		log:      log,
 		svc:      svc,
 		keycloak: keycloak,
 		cfg:      cfg,
@@ -40,13 +34,7 @@ type Server struct {
 }
 
 func (s *Server) Start(ctx context.Context) error {
-	/*allowedRoles := []string{"doctor"}
-	if isAdmin {
-		allowedRoles = append(allowedRoles, "admin")
-	}
-	/**/
-	allowedRoles := []string{"doctor"}
-	allowedRoles = append(allowedRoles, "admin")
+	allowedRoles := []string{"doctor", "admin"}
 
 	private := s.App.Group("/api/v1/private",
 		keycloak.TokenValidationMiddleware(s.keycloak, s.log),
@@ -65,6 +53,9 @@ func (s *Server) Start(ctx context.Context) error {
 }
 
 func (s *Server) Stop(ctx context.Context) error {
-	s.log.Sync()
-	return s.App.Shutdown()
+	err := s.log.Sync()
+	if err != nil {
+		return err
+	}
+	return s.App.ShutdownWithContext(ctx)
 }

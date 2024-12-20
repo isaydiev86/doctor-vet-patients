@@ -36,12 +36,15 @@ func (a *Application) Run(ctx context.Context) error {
 	select {
 	case <-a.waiting():
 		a.logger.Info("App is stopping...")
+	case <-ctx.Done():
+		a.logger.Error("Context cancel")
 	case err := <-errChan:
 		a.logger.Error("Error occurred, stopping app: %v", err)
 		return err
 	}
 
 	for _, component := range a.components {
+		a.logger.Info("Stop component:", component.string)
 		err := component.Stop(ctx)
 		if err != nil {
 			a.logger.Error("Error stopping component %s: %v", component.string, err)

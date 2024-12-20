@@ -1,9 +1,8 @@
-package transport
+package admin
 
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
-	"github.com/isaydiev86/doctor-vet-patients/internal/service"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
@@ -20,11 +19,11 @@ import (
 //	@Failure		400		{object}	models.Response	"Ошибка запроса"
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/users [get]
-func UserHandler(c *fiber.Ctx, svc service.Service) error {
+func (s *Server) UserHandler(c *fiber.Ctx) error {
 	filters := dto.UserFilters{
 		Role: c.Query("role"),
 	}
-	usersData, err := svc.GetUsers(c.Context(), filters)
+	usersData, err := s.svc.GetUsers(c.Context(), filters)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,

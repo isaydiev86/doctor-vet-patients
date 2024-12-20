@@ -1,20 +1,16 @@
-package transport
+package admin
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
-	"github.com/isaydiev86/doctor-vet-patients/internal/service"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
-var validate = validator.New()
-
-// PatientAddHandler Создать нового пациента
+// PatientUpdateHandler Редактирование  пациента
 //
-//	@Summary		Создать нового пациента
-//	@Description	Создать нового пациента
-//	@ID				create_patient
+//	@Summary		Редактирование  пациента
+//	@Description	Редактирование  пациента
+//	@ID				update_patient
 //	@Tags			patients
 //	@Accept			json
 //	@Produce		json
@@ -24,8 +20,8 @@ var validate = validator.New()
 //	@Success		200		{object}	models.Response	"Успешный ответ"
 //	@Failure		400		{object}	models.Response	"Ошибка запроса"
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
-//	@Router			/patient [post]
-func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
+//	@Router			/patient [put]
+func (s *Server) PatientUpdateHandler(c *fiber.Ctx) error {
 	var patient models.Patient
 	if err := c.BodyParser(&patient); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
@@ -44,7 +40,7 @@ func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
 	}
 
 	// Получаем пациентов через сервис
-	err := svc.CreatePatient(c.Context(), getDtoPatientOfApi(patient))
+	err := s.svc.UpdatePatient(c.Context(), getDtoUpdatePatientOfApi(patient))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
@@ -60,8 +56,9 @@ func PatientAddHandler(c *fiber.Ctx, svc service.Service) error {
 	})
 }
 
-func getDtoPatientOfApi(patient models.Patient) dto.Patient {
+func getDtoUpdatePatientOfApi(patient models.Patient) dto.Patient {
 	return dto.Patient{
+		ID:         patient.ID,
 		Fio:        patient.Fio,
 		Phone:      patient.Phone,
 		Address:    patient.Address,

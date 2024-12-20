@@ -6,12 +6,13 @@ import (
 
 	"github.com/isaydiev86/doctor-vet-patients/config"
 	"github.com/isaydiev86/doctor-vet-patients/internal/service"
+	adminRout "github.com/isaydiev86/doctor-vet-patients/transport/admin"
 	privateRout "github.com/isaydiev86/doctor-vet-patients/transport/private"
 	publicRout "github.com/isaydiev86/doctor-vet-patients/transport/public"
 
 	"github.com/isaydiev86/doctor-vet-patients/pkg/app"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
-	"github.com/isaydiev86/doctor-vet-patients/pkg/logger"
+	zapLogger "github.com/isaydiev86/doctor-vet-patients/pkg/logger"
 
 	"github.com/isaydiev86/doctor-vet-patients/db"
 )
@@ -19,17 +20,17 @@ import (
 func main() {
 	cfg, err := config.New()
 	if err != nil {
-		log.Fatalf("Не удалось инициализировать конфигурацию: %v", err)
+		log.Fatalf("Error init config: %v", err)
 	}
 
-	logger, err := logger.New()
+	logger, err := zapLogger.New()
 	if err != nil {
-		log.Fatalf("Не удалось инициализировать логгер: %v\n", err)
+		logger.Fatal("Error init logger: %v\n", err)
 	}
 
-	db, err := db.New(cfg.DB, logger)
+	bd, err := db.New(cfg.DB, logger)
 	if err != nil {
-		logger.Fatal("Ошибка создания базы данных", err)
+		logger.Fatal("Error create database", err)
 	}
 	kcConfig := keycloak.Config{
 		URL:      cfg.Keycloak.URL,
@@ -39,30 +40,39 @@ func main() {
 	}
 	keycloakService := keycloak.New(kcConfig)
 
-	svc := service.New(service.Relation{DB: db}, logger, keycloakService)
+	svc := service.New(service.Relation{DB: bd}, logger, keycloakService)
 
-	public, err := publicRout.New(cfg.Public, svc)
+	public, err := publicRout.New(cfg.Public, svc, logger)
 	if err != nil {
-		logger.Fatal("Ошибка создания public", err)
+		logger.Fatal("Error create public", err)
 	}
 
-	private, err := privateRout.New(cfg.Private, svc, keycloakService)
+	private, err := privateRout.New(cfg.Private, svc, logger, keycloakService)
 	if err != nil {
-		logger.Fatal("Ошибка создания private", err)
+		logger.Fatal("Error create private", err)
 	}
+
+	admin, err := adminRout.New(cfg.Admin, svc, logger, keycloakService)
+	if err != nil {
+		logger.Fatal("Error create adminRout", err)
+	}
+
 	theApp, err := app.New(
 		logger,
-		app.NewLifecycleComponent("db", db),
+		app.NewLifecycleComponent("db", bd),
 		app.NewLifecycleComponent("public", public),
 		app.NewLifecycleComponent("private", private),
+		app.NewLifecycleComponent("admin", admin),
 	)
 	if err != nil {
-		logger.Fatal("Ошибка создания application", err)
+		logger.Fatal("Error create application", err)
 	}
 
-	ctx := context.Background()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	err = theApp.Run(ctx)
 	if err != nil {
-		log.Fatalf("Не удалось запустить приложение: %v", err)
+		logger.Fatal("Error run app: %v", err)
 	}
 }
