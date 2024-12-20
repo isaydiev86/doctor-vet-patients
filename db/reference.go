@@ -7,7 +7,6 @@ import (
 	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/isaydiev86/doctor-vet-patients/db/models"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
-	"go.uber.org/zap"
 )
 
 func (db *DB) GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error) {
@@ -15,7 +14,7 @@ func (db *DB) GetReferences(ctx context.Context, typeQuery string) ([]*dto.Refer
 
 	err := pgxscan.Select(ctx, db.DB, &references, selectReferenceSQL, typeQuery)
 	if err != nil {
-		db.logger.Error("Ошибка получения справочника", zap.Error(err))
+		db.logger.Error("Ошибка получения справочника", err)
 		return nil, fmt.Errorf("failed to fetch references: %w", err)
 	}
 

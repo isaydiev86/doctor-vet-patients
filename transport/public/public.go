@@ -3,6 +3,7 @@ package public
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
@@ -51,7 +52,7 @@ func (s *Server) Start(ctx context.Context) error {
 		return s.LoginHandler(c)
 	})
 
-	return s.App.Listen(s.cfg.Host + ":" + string(s.cfg.Port))
+	return s.App.Listen(s.cfg.Host + ":" + strconv.Itoa(s.cfg.Port))
 }
 
 func (s *Server) Stop(ctx context.Context) error {

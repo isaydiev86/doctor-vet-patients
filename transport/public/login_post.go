@@ -1,10 +1,13 @@
 package public
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
+
+var validate = validator.New()
 
 // LoginHandler Авторизация
 //

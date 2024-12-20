@@ -3,6 +3,7 @@ package private
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
@@ -10,15 +11,16 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/transport"
 )
 
-func New(cfg transport.Config, svc Services) (*Server, error) {
+func New(cfg transport.Config, svc Services, keycloak *keycloak.Service) (*Server, error) {
 	logger, err := logger.New()
 	if err != nil {
 		log.Fatalf("Не удалось инициализировать логгер: %v\n", err)
 	}
 	s := Server{
-		log: logger,
-		svc: svc,
-		cfg: cfg,
+		log:      logger,
+		svc:      svc,
+		keycloak: keycloak,
+		cfg:      cfg,
 	}
 	s.App = fiber.New(fiber.Config{
 		IdleTimeout:  cfg.IdleTimeout,
@@ -31,9 +33,10 @@ func New(cfg transport.Config, svc Services) (*Server, error) {
 
 type Server struct {
 	*fiber.App
-	log Logger
-	svc Services
-	cfg transport.Config
+	log      Logger
+	svc      Services
+	keycloak *keycloak.Service
+	cfg      transport.Config
 }
 
 func (s *Server) Start(ctx context.Context) error {
@@ -46,8 +49,8 @@ func (s *Server) Start(ctx context.Context) error {
 	allowedRoles = append(allowedRoles, "admin")
 
 	private := s.App.Group("/api/v1/private",
-		keycloak.TokenValidationMiddleware(s.Keycloak, s.log),
-		keycloak.RoleValidationMiddleware(svc.Keycloak, s.log, allowedRoles...),
+		keycloak.TokenValidationMiddleware(s.keycloak, s.log),
+		keycloak.RoleValidationMiddleware(s.keycloak, s.log, allowedRoles...),
 	)
 
 	private.Get("/treatment/:id", func(c *fiber.Ctx) error {
@@ -58,7 +61,7 @@ func (s *Server) Start(ctx context.Context) error {
 		return s.ReferenceHandler(c)
 	})
 
-	return s.App.Listen(s.cfg.Host + ":" + string(s.cfg.Port))
+	return s.App.Listen(s.cfg.Host + ":" + strconv.Itoa(s.cfg.Port))
 }
 
 func (s *Server) Stop(ctx context.Context) error {

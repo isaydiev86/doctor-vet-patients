@@ -1,8 +1,6 @@
 package service
 
-import (
-	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
-)
+import "github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 
 type Relation struct {
 	DB Database

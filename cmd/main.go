@@ -6,7 +6,8 @@ import (
 
 	"github.com/isaydiev86/doctor-vet-patients/config"
 	"github.com/isaydiev86/doctor-vet-patients/internal/service"
-	"github.com/isaydiev86/doctor-vet-patients/transport/public"
+	privateRout "github.com/isaydiev86/doctor-vet-patients/transport/private"
+	publicRout "github.com/isaydiev86/doctor-vet-patients/transport/public"
 
 	"github.com/isaydiev86/doctor-vet-patients/pkg/app"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
@@ -16,7 +17,6 @@ import (
 )
 
 func main() {
-
 	cfg, err := config.New()
 	if err != nil {
 		log.Fatalf("Не удалось инициализировать конфигурацию: %v", err)
@@ -41,14 +41,20 @@ func main() {
 
 	svc := service.New(service.Relation{DB: db}, logger, keycloakService)
 
-	public, err := public.New(cfg.Public, svc)
+	public, err := publicRout.New(cfg.Public, svc)
 	if err != nil {
 		logger.Fatal("Ошибка создания public", err)
+	}
+
+	private, err := privateRout.New(cfg.Private, svc, keycloakService)
+	if err != nil {
+		logger.Fatal("Ошибка создания private", err)
 	}
 	theApp, err := app.New(
 		logger,
 		app.NewLifecycleComponent("db", db),
 		app.NewLifecycleComponent("public", public),
+		app.NewLifecycleComponent("private", private),
 	)
 	if err != nil {
 		logger.Fatal("Ошибка создания application", err)

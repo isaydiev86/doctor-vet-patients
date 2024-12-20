@@ -8,7 +8,6 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
-	"go.uber.org/zap"
 )
 
 func (db *DB) CreateUser(ctx context.Context, userID, name, role string) error {
@@ -19,7 +18,7 @@ func (db *DB) CreateUser(ctx context.Context, userID, name, role string) error {
 	_, err := db.Exec(ctx, query, userID, name, role)
 
 	if err != nil {
-		db.logger.Error("failed to create user", zap.Error(err))
+		db.logger.Error("failed to create user", err)
 		return fmt.Errorf("failed to create user: %w", err)
 	}
 
@@ -37,7 +36,7 @@ func (db *DB) UserExists(ctx context.Context, userID string) (bool, error) {
 	var exists bool
 	err := pgxscan.Get(ctx, db.DB, &exists, query, userID)
 	if err != nil {
-		db.logger.Error("failed to check if user exists", zap.Error(err))
+		db.logger.Error("failed to check if user exists", err)
 		return false, fmt.Errorf("failed to check if user exists: %w", err)
 	}
 
@@ -56,7 +55,7 @@ func (db *DB) GetUsers(ctx context.Context, filter dto.UserFilters) ([]*dto.User
 
 	err := pgxscan.Select(ctx, db.DB, &users, query, utils.NilIfEmpty(filter.Role))
 	if err != nil {
-		db.logger.Error("db on GetUsers", zap.Error(err))
+		db.logger.Error("db on GetUsers", err)
 		return nil, fmt.Errorf("failed to fetch users: %w", err)
 	}
 

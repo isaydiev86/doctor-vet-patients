@@ -9,7 +9,6 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/db/models"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
-	"go.uber.org/zap"
 )
 
 func (db *DB) CreateTreatment(ctx context.Context, patientID int64) (int64, error) {
@@ -58,7 +57,7 @@ func (db *DB) GetTreatments(ctx context.Context, filter dto.TreatmentFilters) ([
 		filter.Offset,
 	)
 	if err != nil {
-		db.logger.Error("db on GetTreatments", zap.Error(err))
+		db.logger.Error("db on GetTreatments", err)
 		return nil, fmt.Errorf("failed to fetch treatments: %w", err)
 	}
 
