@@ -329,7 +329,7 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
-                "description": "Возвращает список пользователей",
+                "description": "Получить список пользователей",
                 "consumes": [
                     "application/json"
                 ],
@@ -344,9 +344,10 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Фильтр по role",
+                        "description": "роль",
                         "name": "role",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

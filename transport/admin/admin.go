@@ -52,16 +52,16 @@ func (s *Server) Start(ctx context.Context) error {
 		return s.TreatmentsHandler(c)
 	})
 
-	admin.Get("/users", func(c *fiber.Ctx) error {
-		return s.UserHandler(c)
-	})
-
 	admin.Get("/treatment/:id", func(c *fiber.Ctx) error {
 		return s.TreatmentHandler(c)
 	})
 
 	admin.Get("/reference", func(c *fiber.Ctx) error {
 		return s.ReferenceHandler(c)
+	})
+
+	admin.Get("/users", func(c *fiber.Ctx) error {
+		return s.UsersHandler(c)
 	})
 
 	return s.App.Listen(s.cfg.Host + ":" + strconv.Itoa(s.cfg.Port))

@@ -28,5 +28,4 @@ type Database interface {
 
 	UserExists(ctx context.Context, userID string) (bool, error)
 	CreateUser(ctx context.Context, userID, name, role string) error
-	GetUsers(ctx context.Context, filter dto.UserFilters) ([]*dto.User, error)
 }

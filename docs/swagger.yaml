@@ -441,12 +441,13 @@ paths:
     get:
       consumes:
       - application/json
-      description: Возвращает список пользователей
+      description: Получить список пользователей
       operationId: get_users
       parameters:
-      - description: Фильтр по role
+      - description: роль
         in: query
         name: role
+        required: true
         type: string
       produces:
       - application/json

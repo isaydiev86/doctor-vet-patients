@@ -11,6 +11,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+const MAX_USERS = 10
+
 type Config struct {
 	URL      string `yaml:"url"`
 	Realm    string `yaml:"realm"`
@@ -51,6 +53,41 @@ func (k *Service) GetUserRoles(token string) ([]string, error) {
 	}
 
 	return parseRealmRoles(utils.FromPtr(claims)), nil
+}
+
+func (k *Service) GetUsers(ctx context.Context, role string) ([]*gocloak.User, error) {
+
+	t, err := k.client.LoginClient(ctx, k.Config.ClientID, k.Config.Secret, k.Realm)
+	if err != nil {
+		return nil, err
+	}
+
+	params := gocloak.GetUsersByRoleParams{
+		Max: gocloak.IntP(100),
+	}
+
+	users, err := k.client.GetUsersByRoleName(ctx, t.AccessToken, k.Realm, role, params)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range users {
+		if user.ID == nil {
+			continue
+		}
+
+		realmRoles, err := k.client.GetRealmRolesByUserID(ctx, t.AccessToken, k.Realm, *user.ID)
+		if err != nil {
+			return nil, fmt.Errorf("error fetching realm roles for user %s: %w", *user.Username, err)
+		}
+		roles := make([]string, 0, len(realmRoles))
+		for _, role := range realmRoles {
+			roles = append(roles, gocloak.PString(role.Name))
+		}
+		user.RealmRoles = &roles
+	}
+
+	return users, nil
 }
 
 func (k *Service) Login(ctx context.Context, username, password string) (*gocloak.JWT, error) {

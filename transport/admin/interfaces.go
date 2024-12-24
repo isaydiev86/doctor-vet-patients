@@ -24,5 +24,5 @@ type Services interface {
 
 	GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error)
 
-	GetUsers(ctx context.Context, filter dto.UserFilters) ([]*dto.User, error)
+	GetUsers(ctx context.Context, role string) ([]*dto.User, error)
 }

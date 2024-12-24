@@ -33,7 +33,7 @@ type Server struct {
 	cfg      transport.Config
 }
 
-func (s *Server) Start(ctx context.Context) error {
+func (s *Server) Start(_ context.Context) error {
 	allowedRoles := []string{"doctor", "admin"}
 
 	private := s.App.Group("/api/v1/private",
