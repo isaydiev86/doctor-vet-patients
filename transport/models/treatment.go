@@ -44,3 +44,14 @@ type TreatmentSendForUser struct {
 	ID       int64  `json:"id" validate:"required"`
 	DoctorID string `json:"doctorId" validate:"required"`
 }
+
+// TreatmentUpdateToUser обновление лечения доктором
+type TreatmentUpdateToUser struct {
+	ID          int64   `json:"id" validate:"required"`
+	DoctorID    string  `json:"doctorId" validate:"required"`
+	Weight      float64 `json:"weight" validate:"gte=0"`
+	Temperature float64 `json:"temperature" validate:"gte=0"`
+	Comment     string  `json:"comment" validate:"required"`
+
+	Prescriptions []PrescriptionForUpdate `json:"prescriptions" validate:"min=1"`
+}

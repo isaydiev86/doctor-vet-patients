@@ -15,7 +15,7 @@ func (db *DB) CreateTreatment(ctx context.Context, patientID int64) (int64, erro
 	treatmentQuery := `
 		INSERT INTO treatment (patient_id, status, created_at, updated_at, is_active)
 		VALUES ($1, $2, NOW(), NOW(), 1)
-		RETURNING id
+		RETURNING id;
 	`
 	var treatmentID int64
 	err := db.QueryRow(ctx, treatmentQuery, patientID, models.InLine.String()).Scan(&treatmentID)

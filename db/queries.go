@@ -11,19 +11,6 @@ const updatePatientSQL = `
     WHERE id = $10;
 `
 
-var selectTreatmentsSQL = `
-		SELECT 
-            t.id, t.patient_id, t.doctor_id, t.temperature, t.status, t.created_at, t.updated_at, t.begin_at, t.end_at, 
-            t.comment, t.is_active, t.weight,
-            p.id AS "patient.id", p.fio AS "patient.fio", p.phone AS "patient.phone",
-            p.age AS "patient.age", p.address AS "patient.address", p.animal AS "patient.animal", p.name AS "patient.name", 
-            p.breed AS "patient.breed", p.gender AS "patient.gender", p.is_neutered AS "patient.is_neutered"
-        FROM 
-            treatment t
-        LEFT JOIN 
-            patient p ON t.patient_id = p.id
-        WHERE 1=1`
-
 const selectTreatmentDetailSQL = `
 		SELECT 
             t.id, t.patient_id, t.doctor_id, t.temperature, t.status, t.created_at, t.updated_at, t.begin_at, t.end_at,

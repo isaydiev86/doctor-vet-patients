@@ -2,7 +2,10 @@ package service
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
+	"github.com/isaydiev86/doctor-vet-patients/db"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 )
 
@@ -22,6 +25,24 @@ func (s *Service) UpdateTreatmentForUser(ctx context.Context, treatment dto.Trea
 	return s.svc.DB.UpdateTreatmentForUser(ctx, treatment)
 }
 
-//func (s *Service) Tx(ctx context.Context, f func(any) error) error {
-//	return s.svc.DB.Tx(ctx, f)
-//}
+func (s *Service) UpdateTreatment(ctx context.Context, treatment dto.TreatmentUpdateToUser) error {
+	return s.svc.DB.Tx(ctx, func(tx any) error {
+		txDB, ok := tx.(*db.DB)
+		if !ok {
+			return errors.New("failed to cast transaction to *dbutil.DB")
+		}
+
+		err := txDB.UpdateTreatment(ctx, treatment)
+		if err != nil {
+			return fmt.Errorf("failed db UpdateTreatment: %w", err)
+		}
+
+		// Add prescriptions for treatment
+		err = txDB.AddPrescriptionsToTreatment(ctx, treatment.Prescriptions)
+		if err != nil {
+			return fmt.Errorf("failed db AddPrescriptionsToTreatment: %w", err)
+		}
+
+		return nil
+	})
+}

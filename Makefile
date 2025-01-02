@@ -2,6 +2,11 @@ DOCS_PATH := docs
 DB_URL=postgres://doctor_vet:doctor_vet@localhost:5432/doctor_vet?sslmode=disable
 MIGRATIONS_DIR=./migrations
 
+lint:
+	@echo "Running golangci-lint..."
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.59.1
+	@golangci-lint run
+
 run-app:
 	go run ./cmd main.go
 

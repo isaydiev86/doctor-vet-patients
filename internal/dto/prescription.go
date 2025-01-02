@@ -13,3 +13,12 @@ type Prescription struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
+
+type PrescriptionForUpdate struct {
+	TreatmentID int64
+	Name        string
+	Dose        float64
+	Course      string
+	Category    string
+	Option      string
+}

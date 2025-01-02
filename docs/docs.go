@@ -412,6 +412,51 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "Обновление лечения",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "treatment"
+                ],
+                "summary": "Обновление лечения",
+                "operationId": "update_treatment",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.TreatmentUpdateToUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
             }
         },
         "/treatment/{id}": {
@@ -853,6 +898,35 @@ const docTemplate = `{
                 }
             }
         },
+        "models.PrescriptionForUpdate": {
+            "type": "object",
+            "required": [
+                "course",
+                "dose",
+                "name",
+                "treatmentId"
+            ],
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "course": {
+                    "type": "string"
+                },
+                "dose": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "option": {
+                    "type": "string"
+                },
+                "treatmentId": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.RefResponse": {
             "type": "object",
             "required": [
@@ -970,6 +1044,40 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.TreatmentUpdateToUser": {
+            "type": "object",
+            "required": [
+                "comment",
+                "doctorId",
+                "id"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "doctorId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "prescriptions": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/definitions/models.PrescriptionForUpdate"
+                    }
+                },
+                "temperature": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "weight": {
+                    "type": "number",
+                    "minimum": 0
                 }
             }
         }

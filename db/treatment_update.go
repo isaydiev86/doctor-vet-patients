@@ -10,6 +10,20 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 )
 
+func (db *DB) UpdateTreatment(ctx context.Context, treatment dto.TreatmentUpdateToUser) error {
+	treatmentQuery := `
+		UPDATE treatment 
+		SET doctor_id = $1, temperature = $2, weight = $3, comment = $4, status = $5, updated_at = now()
+    	WHERE id = $6;`
+
+	_, err := db.Exec(ctx, treatmentQuery, treatment.DoctorID, treatment.Temperature, treatment.Weight, treatment.Comment,
+		models.Done.String(), treatment.ID)
+	if err != nil {
+		return fmt.Errorf("failed to update treatment: %w", err)
+	}
+	return nil
+}
+
 func (db *DB) UpdateTreatmentForUser(ctx context.Context, treatment dto.TreatmentSendForUser) error {
 	treatmentQuery := `
 		UPDATE treatment 

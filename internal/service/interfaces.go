@@ -22,6 +22,7 @@ type Database interface {
 	GetTreatmentForUser(ctx context.Context, userId string) (*dto.TreatmentDetail, error)
 	CreateTreatment(ctx context.Context, patientID int64) (int64, error)
 	UpdateTreatmentForUser(ctx context.Context, treatment dto.TreatmentSendForUser) error
+	UpdateTreatment(ctx context.Context, treatment dto.TreatmentUpdateToUser) error
 
 	CreatePatient(ctx context.Context, patient dto.Patient) (int64, error)
 	UpdatePatient(ctx context.Context, patient dto.Patient) error

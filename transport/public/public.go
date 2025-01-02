@@ -9,13 +9,7 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/transport"
 )
 
-// RegisterPublicRoutes @title			Patient Service API
-// @version		1.0
-// @description	API для работы с пациентами и их данными
-// @schemes		http
-// @termsOfService	http://swagger.io.terms/
-
-func New(cfg transport.Config, svc Services, log Logger) (*Server, error) {
+func New(cfg transport.Config, svc Services, log Logger) *Server {
 	s := Server{
 		log: log,
 		svc: svc,
@@ -27,7 +21,7 @@ func New(cfg transport.Config, svc Services, log Logger) (*Server, error) {
 		WriteTimeout: cfg.WriteTimeout,
 	})
 
-	return &s, nil
+	return &s
 }
 
 type Server struct {

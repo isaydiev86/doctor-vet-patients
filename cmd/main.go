@@ -42,20 +42,11 @@ func main() {
 
 	svc := service.New(service.Relation{DB: bd}, logger, keycloakService)
 
-	public, err := publicRout.New(cfg.Public, svc, logger)
-	if err != nil {
-		logger.Fatal("Error create public", err)
-	}
+	public := publicRout.New(cfg.Public, svc, logger)
 
-	private, err := privateRout.New(cfg.Private, svc, logger, keycloakService)
-	if err != nil {
-		logger.Fatal("Error create private", err)
-	}
+	private := privateRout.New(cfg.Private, svc, logger, keycloakService)
 
-	admin, err := adminRout.New(cfg.Admin, svc, logger, keycloakService)
-	if err != nil {
-		logger.Fatal("Error create adminRout", err)
-	}
+	admin := adminRout.New(cfg.Admin, svc, logger, keycloakService)
 
 	theApp, err := app.New(
 		logger,

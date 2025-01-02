@@ -25,7 +25,7 @@ func (s *Server) PreparationsToSymptomsHandler(c *fiber.Ctx) error {
 	idsStr := c.Query("ids")
 	idStrings := strings.Split(idsStr, ",")
 
-	var ids []int64
+	ids := make([]int64, len(idStrings))
 	for _, idStr := range idStrings {
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {

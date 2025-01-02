@@ -9,7 +9,7 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/transport"
 )
 
-func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Service) (*Server, error) {
+func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Service) *Server {
 	s := Server{
 		log:      log,
 		svc:      svc,
@@ -22,7 +22,7 @@ func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Serv
 		WriteTimeout: cfg.WriteTimeout,
 	})
 
-	return &s, nil
+	return &s
 }
 
 type Server struct {
@@ -33,7 +33,7 @@ type Server struct {
 	cfg      transport.Config
 }
 
-func (s *Server) Start(ctx context.Context) error {
+func (s *Server) Start(_ context.Context) error {
 	allowedRoles := []string{"admin"}
 
 	admin := s.App.Group("/api/v1/admin",

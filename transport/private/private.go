@@ -9,7 +9,7 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/transport"
 )
 
-func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Service) (*Server, error) {
+func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Service) *Server {
 	s := Server{
 		log:      log,
 		svc:      svc,
@@ -22,7 +22,7 @@ func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Serv
 		WriteTimeout: cfg.WriteTimeout,
 	})
 
-	return &s, nil
+	return &s
 }
 
 type Server struct {
@@ -47,6 +47,10 @@ func (s *Server) Start(_ context.Context) error {
 
 	private.Get("/treatment", func(c *fiber.Ctx) error {
 		return s.TreatmentForUserHandler(c)
+	})
+
+	private.Put("/treatment", func(c *fiber.Ctx) error {
+		return s.TreatmentUpdateHandler(c)
 	})
 
 	private.Get("/reference", func(c *fiber.Ctx) error {

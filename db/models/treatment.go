@@ -21,16 +21,16 @@ func (s StatusPrescription) String() string { return string(s) }
 type Treatment struct {
 	ID          int64           `db:"id"`
 	PatientID   int64           `db:"patient_id"`
+	IsActive    int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
 	DoctorID    string          `db:"doctor_id"`
-	Status      sql.NullString  `db:"status"`
 	CreatedAt   time.Time       `db:"created_at"`
 	UpdatedAt   time.Time       `db:"updated_at"`
-	BeginAt     sql.NullTime    `db:"begin_at"`  // начало лечения
-	EndAt       sql.NullTime    `db:"end_at"`    //конец лечения
-	Comment     sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
-	IsActive    int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
+	Comment     sql.NullString  `db:"comment"` // информация в случаи закрытия лечения
+	Status      sql.NullString  `db:"status"`
 	Weight      sql.NullFloat64 `db:"weight"`
 	Temperature sql.NullFloat64 `db:"temperature"`
+	BeginAt     sql.NullTime    `db:"begin_at"` // начало лечения
+	EndAt       sql.NullTime    `db:"end_at"`   // конец лечения
 }
 
 type TreatmentRow struct {
@@ -41,7 +41,7 @@ type TreatmentRow struct {
 	CreatedAt   time.Time       `db:"created_at"`
 	UpdatedAt   time.Time       `db:"updated_at"`
 	BeginAt     sql.NullTime    `db:"begin_at"`  // начало лечения
-	EndAt       sql.NullTime    `db:"end_at"`    //конец лечения
+	EndAt       sql.NullTime    `db:"end_at"`    // конец лечения
 	Comment     sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
 	IsActive    int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
 	Weight      sql.NullFloat64 `db:"weight"`
@@ -57,7 +57,7 @@ type TreatmentDetailRow struct {
 	CreatedAt         time.Time       `db:"created_at"`
 	UpdatedAt         time.Time       `db:"updated_at"`
 	BeginAt           sql.NullTime    `db:"begin_at"`  // начало лечения
-	EndAt             sql.NullTime    `db:"end_at"`    //конец лечения
+	EndAt             sql.NullTime    `db:"end_at"`    // конец лечения
 	Comment           sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
 	IsActive          int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
 	Weight            sql.NullFloat64 `db:"weight"`

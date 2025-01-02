@@ -52,3 +52,13 @@ type TreatmentSendForUser struct {
 	ID       int64
 	DoctorID string
 }
+
+type TreatmentUpdateToUser struct {
+	ID          int64
+	DoctorID    string
+	Weight      float64
+	Temperature float64
+	Comment     string
+
+	Prescriptions []PrescriptionForUpdate
+}

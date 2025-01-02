@@ -186,6 +186,26 @@ definitions:
       userId:
         type: string
     type: object
+  models.PrescriptionForUpdate:
+    properties:
+      category:
+        type: string
+      course:
+        type: string
+      dose:
+        type: number
+      name:
+        type: string
+      option:
+        type: string
+      treatmentId:
+        type: integer
+    required:
+    - course
+    - dose
+    - name
+    - treatmentId
+    type: object
   models.RefResponse:
     properties:
       id:
@@ -266,6 +286,30 @@ definitions:
       id:
         type: integer
     required:
+    - doctorId
+    - id
+    type: object
+  models.TreatmentUpdateToUser:
+    properties:
+      comment:
+        type: string
+      doctorId:
+        type: string
+      id:
+        type: integer
+      prescriptions:
+        items:
+          $ref: '#/definitions/models.PrescriptionForUpdate'
+        minItems: 1
+        type: array
+      temperature:
+        minimum: 0
+        type: number
+      weight:
+        minimum: 0
+        type: number
+    required:
+    - comment
     - doctorId
     - id
     type: object
@@ -535,6 +579,36 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: Получить детали лечения для доктора
+      tags:
+      - treatment
+    put:
+      consumes:
+      - application/json
+      description: Обновление лечения
+      operationId: update_treatment
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/models.TreatmentUpdateToUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Обновление лечения
       tags:
       - treatment
   /treatment/{id}:
