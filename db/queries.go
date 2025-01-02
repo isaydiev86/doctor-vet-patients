@@ -62,3 +62,11 @@ const selectReferenceSQL = `
 	FROM reference
 	WHERE type = $1
 `
+const selectSymptomsSQL = `
+	SELECT id, name
+	FROM symptom;
+`
+const selectPreparationsSQL = `
+	SELECT id, name, dose, course, category, option
+	FROM preparation;
+`

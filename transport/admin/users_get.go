@@ -13,10 +13,10 @@ import (
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			role	query		string				true	"роль"
-//	@Success		200		{array}		models.User     	"Список пользователей"
-//	@Failure		400		{object}	models.Response		"Ошибка запроса"
-//	@Failure		500		{object}	models.Response		"Внутренняя ошибка сервера"
+//	@Param			role	query		string			true	"роль"
+//	@Success		200		{array}		models.User		"Список пользователей"
+//	@Failure		400		{object}	models.Response	"Ошибка запроса"
+//	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/users [get]
 func (s *Server) UsersHandler(c *fiber.Ctx) error {
 	role := c.Query("role", "doctor")

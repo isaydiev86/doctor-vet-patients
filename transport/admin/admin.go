@@ -56,6 +56,10 @@ func (s *Server) Start(ctx context.Context) error {
 		return s.TreatmentHandler(c)
 	})
 
+	admin.Put("/treatment", func(c *fiber.Ctx) error {
+		return s.TreatmentSendOnUserHandler(c)
+	})
+
 	admin.Get("/reference", func(c *fiber.Ctx) error {
 		return s.ReferenceHandler(c)
 	})

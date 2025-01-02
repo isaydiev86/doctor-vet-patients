@@ -143,6 +143,93 @@
                 }
             }
         },
+        "/preparations": {
+            "get": {
+                "description": "Получить список препаратов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "preparations"
+                ],
+                "summary": "Получить список препаратов",
+                "operationId": "get_preparations",
+                "responses": {
+                    "200": {
+                        "description": "Список препаратов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/preparationsToSymptoms": {
+            "get": {
+                "description": "Получить список препаратов по симптомам",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "preparations"
+                ],
+                "summary": "Получить список препаратов по симптомам",
+                "operationId": "get_preparations_to_symptoms",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "description": "список id симптомов",
+                        "name": "ids",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список препаратов по симптомам",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/reference": {
             "get": {
                 "description": "Получить список справочника",
@@ -173,6 +260,131 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.RefResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/send_treatment": {
+            "put": {
+                "description": "Назначить лечения на доктора",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "treatment"
+                ],
+                "summary": "Назначить лечения на доктора",
+                "operationId": "treatment_send_on_user",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.TreatmentSendForUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/symptoms": {
+            "get": {
+                "description": "Получить список симптомов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "symptoms"
+                ],
+                "summary": "Получить список симптомов",
+                "operationId": "get_symptoms",
+                "responses": {
+                    "200": {
+                        "description": "Список симптомов",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Symptoms"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/treatment": {
+            "get": {
+                "description": "Возвращает детали  лечения для доктора",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "treatment"
+                ],
+                "summary": "Получить детали лечения для доктора",
+                "operationId": "get_treatment_for_user",
+                "responses": {
+                    "200": {
+                        "description": "Детали лечения",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.TreatmentDetail"
                             }
                         }
                     },
@@ -424,6 +636,37 @@
                 }
             }
         },
+        "github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations": {
+            "type": "object",
+            "required": [
+                "category",
+                "course",
+                "dose",
+                "id",
+                "name",
+                "option"
+            ],
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "course": {
+                    "type": "string"
+                },
+                "dose": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "option": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_isaydiev86_doctor-vet-patients_transport_models.Prescription": {
             "type": "object",
             "required": [
@@ -461,6 +704,21 @@
                     "type": "integer"
                 },
                 "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_isaydiev86_doctor-vet-patients_transport_models.Symptoms": {
+            "type": "object",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }
@@ -686,6 +944,21 @@
                     "description": "Вес животного в кг, \u003e= 0",
                     "type": "number",
                     "minimum": 0
+                }
+            }
+        },
+        "models.TreatmentSendForUser": {
+            "type": "object",
+            "required": [
+                "doctorId",
+                "id"
+            ],
+            "properties": {
+                "doctorId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         }

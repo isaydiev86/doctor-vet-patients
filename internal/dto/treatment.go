@@ -10,8 +10,8 @@ type Treatment struct {
 	Status      string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	BeginAt     time.Time
-	EndAt       time.Time
+	BeginAt     *time.Time
+	EndAt       *time.Time
 	Comment     string
 	IsActive    int64
 	Weight      float64
@@ -28,8 +28,8 @@ type TreatmentDetail struct {
 	Status      string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	BeginAt     time.Time
-	EndAt       time.Time
+	BeginAt     *time.Time
+	EndAt       *time.Time
 	Comment     string
 	IsActive    int64
 	Temperature float64
@@ -46,4 +46,9 @@ type TreatmentFilters struct {
 	Date   string
 	Limit  int
 	Offset int
+}
+
+type TreatmentSendForUser struct {
+	ID       int64
+	DoctorID string
 }

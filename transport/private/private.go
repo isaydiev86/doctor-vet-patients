@@ -45,8 +45,24 @@ func (s *Server) Start(_ context.Context) error {
 		return s.TreatmentHandler(c)
 	})
 
+	private.Get("/treatment", func(c *fiber.Ctx) error {
+		return s.TreatmentForUserHandler(c)
+	})
+
 	private.Get("/reference", func(c *fiber.Ctx) error {
 		return s.ReferenceHandler(c)
+	})
+
+	private.Get("/symptoms", func(c *fiber.Ctx) error {
+		return s.SymptomsHandler(c)
+	})
+
+	private.Get("/preparations", func(c *fiber.Ctx) error {
+		return s.PreparationsHandler(c)
+	})
+
+	private.Get("/preparationsToSymptoms", func(c *fiber.Ctx) error {
+		return s.PreparationsToSymptomsHandler(c)
 	})
 
 	return s.App.Listen(s.cfg.Host + ":" + strconv.Itoa(s.cfg.Port))

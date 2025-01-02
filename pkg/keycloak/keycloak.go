@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Nerzal/gocloak/v13"
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
 	"github.com/pkg/errors"
@@ -35,6 +36,23 @@ func New(config Config) *Service {
 		Realm:  config.Realm,
 		client: client,
 	}
+}
+func (k *Service) GetToken(c *fiber.Ctx) (string, error) {
+	authHeader := c.Get("Authorization")
+	if authHeader == "" {
+		return "", errors.New("missing Authorization header")
+	}
+
+	token := ""
+	if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+		token = authHeader[7:]
+	}
+
+	if token == "" {
+		return "", errors.New("invalid Authorization header format")
+	}
+
+	return token, nil
 }
 
 func (k *Service) ValidateToken(ctx context.Context, token string) (bool, error) {

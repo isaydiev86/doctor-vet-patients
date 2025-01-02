@@ -1,7 +1,6 @@
 package keycloak
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -15,7 +14,7 @@ type Response struct {
 
 func TokenValidationMiddleware(k *Service, logger Logger) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		token, err := getToken(c)
+		token, err := k.GetToken(c)
 		if err != nil {
 			logger.Warn("Authorization error: ", err)
 			return c.Status(fiber.StatusUnauthorized).JSON(Response{
@@ -41,7 +40,7 @@ func TokenValidationMiddleware(k *Service, logger Logger) fiber.Handler {
 
 func RoleValidationMiddleware(k *Service, logger Logger, allowedRoles ...string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		token, err := getToken(c)
+		token, err := k.GetToken(c)
 		if err != nil {
 			logger.Warn("Authorization error: ", err)
 			return c.Status(fiber.StatusUnauthorized).JSON(Response{
@@ -76,22 +75,4 @@ func RoleValidationMiddleware(k *Service, logger Logger, allowedRoles ...string)
 			Description: "Forbidden: insufficient permissions",
 		})
 	}
-}
-
-func getToken(c *fiber.Ctx) (string, error) {
-	authHeader := c.Get("Authorization")
-	if authHeader == "" {
-		return "", errors.New("missing Authorization header")
-	}
-
-	token := ""
-	if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
-		token = authHeader[7:]
-	}
-
-	if token == "" {
-		return "", errors.New("invalid Authorization header format")
-	}
-
-	return token, nil
 }

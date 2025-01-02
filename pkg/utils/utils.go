@@ -27,6 +27,13 @@ func Ter[T any](x bool, a, b T) T {
 	return b
 }
 
+func ToTimePtr(nt sql.NullTime) *time.Time {
+	if nt.Valid {
+		return &nt.Time
+	}
+	return nil
+}
+
 func ValidNullBool(b bool) sql.NullBool          { return sql.NullBool{Bool: b, Valid: true} }
 func ValidNullString(s string) sql.NullString    { return sql.NullString{String: s, Valid: true} }
 func ValidNullTime(t time.Time) sql.NullTime     { return sql.NullTime{Time: t, Valid: true} }

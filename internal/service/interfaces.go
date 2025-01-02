@@ -19,12 +19,17 @@ type Database interface {
 
 	GetTreatments(ctx context.Context, filter dto.TreatmentFilters) ([]*dto.Treatment, error)
 	GetTreatment(ctx context.Context, id int64) (*dto.TreatmentDetail, error)
+	GetTreatmentForUser(ctx context.Context, userId string) (*dto.TreatmentDetail, error)
 	CreateTreatment(ctx context.Context, patientID int64) (int64, error)
+	UpdateTreatmentForUser(ctx context.Context, treatment dto.TreatmentSendForUser) error
 
 	CreatePatient(ctx context.Context, patient dto.Patient) (int64, error)
 	UpdatePatient(ctx context.Context, patient dto.Patient) error
 
 	GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error)
+	GetSymptoms(ctx context.Context) ([]*dto.Symptoms, error)
+	GetPreparations(ctx context.Context) ([]*dto.Preparations, error)
+	GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.Preparations, error)
 
 	UserExists(ctx context.Context, userID string) (bool, error)
 	CreateUser(ctx context.Context, userID, name, role string) error

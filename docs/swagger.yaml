@@ -43,6 +43,28 @@ definitions:
     - name
     - phone
     type: object
+  github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations:
+    properties:
+      category:
+        type: string
+      course:
+        type: string
+      dose:
+        type: number
+      id:
+        type: integer
+      name:
+        type: string
+      option:
+        type: string
+    required:
+    - category
+    - course
+    - dose
+    - id
+    - name
+    - option
+    type: object
   github_com_isaydiev86_doctor-vet-patients_transport_models.Prescription:
     properties:
       category:
@@ -71,6 +93,16 @@ definitions:
     - name
     - treatmentId
     - updatedAt
+    type: object
+  github_com_isaydiev86_doctor-vet-patients_transport_models.Symptoms:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - id
+    - name
     type: object
   github_com_isaydiev86_doctor-vet-patients_transport_models.Treatment:
     properties:
@@ -227,6 +259,16 @@ definitions:
     - status
     - updatedAt
     type: object
+  models.TreatmentSendForUser:
+    properties:
+      doctorId:
+        type: string
+      id:
+        type: integer
+    required:
+    - doctorId
+    - id
+    type: object
 info:
   contact: {}
 paths:
@@ -322,6 +364,64 @@ paths:
       summary: Редактирование  пациента
       tags:
       - patients
+  /preparations:
+    get:
+      consumes:
+      - application/json
+      description: Получить список препаратов
+      operationId: get_preparations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список препаратов
+          schema:
+            items:
+              $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Получить список препаратов
+      tags:
+      - preparations
+  /preparationsToSymptoms:
+    get:
+      consumes:
+      - application/json
+      description: Получить список препаратов по симптомам
+      operationId: get_preparations_to_symptoms
+      parameters:
+      - description: список id симптомов
+        in: query
+        name: ids
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список препаратов по симптомам
+          schema:
+            items:
+              $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Получить список препаратов по симптомам
+      tags:
+      - preparations
   /reference:
     get:
       consumes:
@@ -354,6 +454,89 @@ paths:
       summary: Получить список справочника
       tags:
       - reference
+  /send_treatment:
+    put:
+      consumes:
+      - application/json
+      description: Назначить лечения на доктора
+      operationId: treatment_send_on_user
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/models.TreatmentSendForUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Назначить лечения на доктора
+      tags:
+      - treatment
+  /symptoms:
+    get:
+      consumes:
+      - application/json
+      description: Получить список симптомов
+      operationId: get_symptoms
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список симптомов
+          schema:
+            items:
+              $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Symptoms'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Получить список симптомов
+      tags:
+      - symptoms
+  /treatment:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает детали  лечения для доктора
+      operationId: get_treatment_for_user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Детали лечения
+          schema:
+            items:
+              $ref: '#/definitions/models.TreatmentDetail'
+            type: array
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Получить детали лечения для доктора
+      tags:
+      - treatment
   /treatment/{id}:
     get:
       consumes:
