@@ -119,7 +119,7 @@ func (k *Service) Login(ctx context.Context, username, password string) (*gocloa
 
 // RefreshToken refreshes the given token.
 func (k *Service) RefreshToken(ctx context.Context, refreshToken string) (*gocloak.JWT, error) {
-	jw, err := k.client.RefreshToken(ctx, k.Config.ClientID, k.Config.Secret, k.Realm, refreshToken)
+	jw, err := k.client.RefreshToken(ctx, refreshToken, k.Config.ClientID, k.Config.Secret, k.Realm)
 	if err != nil {
 		return nil, err
 	}

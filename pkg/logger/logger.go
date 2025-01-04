@@ -25,9 +25,9 @@ func (l *Logger) Sync() error {
 }
 func (l *Logger) Debug(msg string, fields ...any) { l.z.Debug(msg, toZapFields(fields)...) }
 func (l *Logger) Info(msg string, fields ...any)  { l.z.Info(msg, toZapFields(fields)...) }
-func (l *Logger) Warn(msg string, fields ...any)  { l.z.Debug(msg, toZapFields(fields)...) }
-func (l *Logger) Error(msg string, fields ...any) { l.z.Debug(msg, toZapFields(fields)...) }
-func (l *Logger) Fatal(msg string, fields ...any) { l.z.Debug(msg, toZapFields(fields)...) }
+func (l *Logger) Warn(msg string, fields ...any)  { l.z.Warn(msg, toZapFields(fields)...) }
+func (l *Logger) Error(msg string, fields ...any) { l.z.Error(msg, toZapFields(fields)...) }
+func (l *Logger) Fatal(msg string, fields ...any) { l.z.Fatal(msg, toZapFields(fields)...) }
 
 func toZapFields(fields []interface{}) []zap.Field {
 	var zf []zap.Field

@@ -71,7 +71,7 @@ func (db *DB) GetTreatmentForUser(ctx context.Context, userId string) (*dto.Trea
         WHERE 
             t.doctor_id = $1 and t.status = 'в процессе'
 		GROUP BY 
-            t.id, p.id;
+            t.id, p.id LIMIT 1;
 `
 
 	err := pgxscan.Get(ctx, db.DB, &treatment, query, userId)

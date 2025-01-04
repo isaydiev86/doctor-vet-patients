@@ -40,6 +40,10 @@ func (s *Server) Start(_ context.Context) error {
 		return s.LoginHandler(c)
 	})
 
+	grp.Post("/refreshToken", func(c *fiber.Ctx) error {
+		return s.RefreshTokenHandler(c)
+	})
+
 	return s.App.Listen(s.cfg.Host + ":" + strconv.Itoa(s.cfg.Port))
 }
 

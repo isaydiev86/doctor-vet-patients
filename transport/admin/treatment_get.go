@@ -73,6 +73,8 @@ func getPrescriptionOfDTO(dto []dto.Prescription) []models.Prescription {
 			Course:      p.Course,
 			Category:    p.Category,
 			Option:      p.Option,
+			CreatedAt:   p.CreatedAt,
+			UpdatedAt:   p.UpdatedAt,
 		}
 	}
 	return prescription

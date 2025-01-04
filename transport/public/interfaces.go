@@ -17,4 +17,5 @@ type Logger interface {
 
 type Services interface {
 	Login(ctx context.Context, login dto.LoginRequest) (*dto.LoginResponse, error)
+	RefreshToken(ctx context.Context, refreshToken string) (*dto.RefreshTokenShort, error)
 }

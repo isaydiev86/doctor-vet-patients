@@ -17,6 +17,10 @@ type RefreshTokenShort struct {
 	RefreshToken string `json:"refreshToken"`
 }
 
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refreshToken"`
+}
+
 type LoginResponse struct {
 	Role         string `json:"role"`
 	Name         string `json:"name"`

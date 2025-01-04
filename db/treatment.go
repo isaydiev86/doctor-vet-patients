@@ -155,7 +155,7 @@ func mapTreatmentDetailDBtoDTO(row *models.TreatmentDetailRow) *dto.TreatmentDet
 		Patient: dto.Patient{
 			ID:         row.Patient.ID,
 			Fio:        row.Patient.Fio.String,
-			Phone:      row.Patient.Fio.String,
+			Phone:      row.Patient.Phone.String,
 			Address:    row.Patient.Address.String,
 			Animal:     row.Patient.Animal.String,
 			Name:       row.Patient.Name.String,
