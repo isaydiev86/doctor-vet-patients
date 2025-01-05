@@ -1,7 +1,11 @@
 package private
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
+	sysError "github.com/isaydiev86/doctor-vet-patients/internal/errors"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
@@ -39,6 +43,13 @@ func (s *Server) TreatmentForUserHandler(c *fiber.Ctx) error {
 
 	treatmentsDto, err := s.svc.GetTreatmentForUser(c.Context(), userID)
 	if err != nil {
+		if errors.Is(err, sysError.ErrNotFound) {
+			return c.Status(fiber.StatusNotFound).JSON(models.Response{
+				Code:        fiber.StatusNotFound,
+				Message:     fmt.Sprintf("лечение с id %s не найдено", userID),
+				Description: fmt.Sprintf("лечение с id %s не найдено", userID),
+			})
+		}
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
 			Code:        fiber.StatusInternalServerError,
 			Message:     err.Error(),

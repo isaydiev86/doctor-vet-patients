@@ -40,11 +40,26 @@ func mapDBPreparationsToDTO(rows []*models.Preparations) []*dto.Preparations {
 func (db *DB) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.Preparations, error) {
 	var preparations []*models.Preparations
 
-	query := `select DISTINCT pr.id, pr.name, pr.dose, pr.course, pr.category, pr.option
-				from preparation as pr
-				join symptom_relation_preparation as srp on pr.id = srp.preparation_id
-				join symptom as s on srp.symptom_id = s.id
-			  where s.id = ANY($1);`
+	// группируем по популярности
+	query := `
+		WITH ranked_preparations AS (
+			SELECT 
+				pr.id, 
+				pr.name, 
+				pr.dose, 
+				pr.course, 
+				pr.category, 
+				pr.option,
+				ROW_NUMBER() OVER (PARTITION BY pr.category ORDER BY pr.popularity DESC) as rank
+			FROM preparation as pr
+			JOIN symptom_relation_preparation as srp ON pr.id = srp.preparation_id
+			JOIN symptom as s ON srp.symptom_id = s.id
+			WHERE s.id = ANY($1)
+		)
+		SELECT id, name, dose, course, category, option
+		FROM ranked_preparations
+		WHERE rank = 1;
+	`
 
 	err := pgxscan.Select(ctx, db.DB, &preparations, query, ids)
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/isaydiev86/doctor-vet-patients/db/models"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
+	"github.com/isaydiev86/doctor-vet-patients/internal/errors"
 )
 
 func (db *DB) UpdateTreatment(ctx context.Context, treatment dto.TreatmentUpdateToUser) error {
@@ -77,14 +78,17 @@ func (db *DB) GetTreatmentForUser(ctx context.Context, userId string) (*dto.Trea
 	err := pgxscan.Get(ctx, db.DB, &treatment, query, userId)
 	if err != nil {
 		if pgxscan.NotFound(err) {
-			return nil, fmt.Errorf("лечение с id %s не найдено", userId)
+			db.logger.Error("лечение с id %s не найдено", err)
+			return nil, errors.ErrNotFound
 		}
+		db.logger.Error("не удалось получить детали лечения", err)
 		return nil, fmt.Errorf("не удалось получить детали лечения: %w", err)
 	}
 
 	// Парсим поле prescriptions из JSON в слайс структур Prescription
 	err = json.Unmarshal(treatment.PrescriptionsJSON, &treatment.Prescription)
 	if err != nil {
+		db.logger.Error("не удалось распарсить рецепты", err)
 		return nil, fmt.Errorf("не удалось распарсить рецепты: %w", err)
 	}
 
