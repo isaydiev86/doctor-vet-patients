@@ -15,10 +15,10 @@ type Prescription struct {
 }
 
 type PrescriptionForUpdate struct {
-	TreatmentID int64
-	Name        string
-	Dose        float64
-	Course      string
-	Category    string
-	Option      string
+	PreparationID int64
+	Name          string
+	Dose          float64
+	Course        string
+	Category      string
+	Option        string
 }

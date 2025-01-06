@@ -222,7 +222,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations"
+                                "$ref": "#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsToSymptoms"
                             }
                         }
                     },
@@ -770,6 +770,44 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsToSymptoms": {
+            "type": "object",
+            "required": [
+                "category",
+                "course",
+                "dose",
+                "id",
+                "name",
+                "option",
+                "similar"
+            ],
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "course": {
+                    "type": "string"
+                },
+                "dose": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "option": {
+                    "type": "string"
+                },
+                "similar": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.NameResponse"
+                    }
+                }
+            }
+        },
         "github_com_isaydiev86_doctor-vet-patients_transport_models.Prescription": {
             "type": "object",
             "required": [
@@ -945,13 +983,28 @@ const docTemplate = `{
                 }
             }
         },
+        "models.NameResponse": {
+            "type": "object",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.PrescriptionForUpdate": {
             "type": "object",
             "required": [
                 "course",
                 "dose",
                 "name",
-                "treatmentId"
+                "preparationId"
             ],
             "properties": {
                 "category": {
@@ -969,7 +1022,7 @@ const docTemplate = `{
                 "option": {
                     "type": "string"
                 },
-                "treatmentId": {
+                "preparationId": {
                     "type": "integer"
                 }
             }

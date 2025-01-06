@@ -15,10 +15,10 @@ type Prescription struct {
 }
 
 type PrescriptionForUpdate struct {
-	TreatmentID int64   `json:"treatmentId" validate:"required"`
-	Name        string  `json:"name" validate:"required"`
-	Dose        float64 `json:"dose" validate:"required"`
-	Course      string  `json:"course" validate:"required"`
-	Category    string  `json:"category"`
-	Option      string  `json:"option"`
+	PreparationID int64   `json:"preparationId" validate:"required"`
+	Name          string  `json:"name" validate:"required"`
+	Dose          float64 `json:"dose" validate:"required"`
+	Course        string  `json:"course" validate:"required"`
+	Category      string  `json:"category"`
+	Option        string  `json:"option"`
 }

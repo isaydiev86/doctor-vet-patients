@@ -10,8 +10,8 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (db *DB) AddPrescriptionsToTreatment(ctx context.Context, list []dto.PrescriptionForUpdate) error {
-	prescriptions := mapPrescriptionsDTOtoSQL(list)
+func (db *DB) AddPrescriptionsToTreatment(ctx context.Context, treatmentID int64, list []dto.PrescriptionForUpdate) error {
+	prescriptions := mapPrescriptionsDTOtoSQL(treatmentID, list)
 
 	batch := &pgx.Batch{}
 
@@ -40,12 +40,12 @@ func (db *DB) AddPrescriptionsToTreatment(ctx context.Context, list []dto.Prescr
 	return nil
 }
 
-func mapPrescriptionsDTOtoSQL(dto []dto.PrescriptionForUpdate) []models.PrescriptionRow {
+func mapPrescriptionsDTOtoSQL(treatmentID int64, dto []dto.PrescriptionForUpdate) []models.PrescriptionRow {
 	rows := make([]models.PrescriptionRow, len(dto))
 
 	for i, p := range dto {
 		rows[i] = models.PrescriptionRow{
-			TreatmentID: p.TreatmentID,
+			TreatmentID: treatmentID,
 			Name:        utils.ValidNullString(p.Name),
 			Dose:        utils.ValidNullFloat64(p.Dose),
 			Course:      utils.ValidNullString(p.Course),

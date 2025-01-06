@@ -65,6 +65,33 @@ definitions:
     - name
     - option
     type: object
+  github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsToSymptoms:
+    properties:
+      category:
+        type: string
+      course:
+        type: string
+      dose:
+        type: number
+      id:
+        type: integer
+      name:
+        type: string
+      option:
+        type: string
+      similar:
+        items:
+          $ref: '#/definitions/models.NameResponse'
+        type: array
+    required:
+    - category
+    - course
+    - dose
+    - id
+    - name
+    - option
+    - similar
+    type: object
   github_com_isaydiev86_doctor-vet-patients_transport_models.Prescription:
     properties:
       category:
@@ -186,6 +213,16 @@ definitions:
       userId:
         type: string
     type: object
+  models.NameResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
   models.PrescriptionForUpdate:
     properties:
       category:
@@ -198,13 +235,13 @@ definitions:
         type: string
       option:
         type: string
-      treatmentId:
+      preparationId:
         type: integer
     required:
     - course
     - dose
     - name
-    - treatmentId
+    - preparationId
     type: object
   models.RefResponse:
     properties:
@@ -465,7 +502,7 @@ paths:
           description: Список препаратов по симптомам
           schema:
             items:
-              $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Preparations'
+              $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsToSymptoms'
             type: array
         "400":
           description: Ошибка запроса

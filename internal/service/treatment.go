@@ -38,10 +38,12 @@ func (s *Service) UpdateTreatment(ctx context.Context, treatment dto.TreatmentUp
 		}
 
 		// Add prescriptions for treatment
-		err = txDB.AddPrescriptionsToTreatment(ctx, treatment.Prescriptions)
+		err = txDB.AddPrescriptionsToTreatment(ctx, treatment.ID, treatment.Prescriptions)
 		if err != nil {
 			return fmt.Errorf("failed db AddPrescriptionsToTreatment: %w", err)
 		}
+
+		///TODO update popularity for preparation with PreparationID
 
 		return nil
 	})

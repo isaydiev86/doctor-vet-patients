@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
@@ -16,10 +17,10 @@ import (
 //	@Tags			preparations
 //	@Accept			json
 //	@Produce		json
-//	@Param			ids	query		array				true	"список id симптомов"
-//	@Success		200	{array}		models.Preparations	"Список препаратов по симптомам"
-//	@Failure		400	{object}	models.Response		"Ошибка запроса"
-//	@Failure		500	{object}	models.Response		"Внутренняя ошибка сервера"
+//	@Param			ids	query		array							true	"список id симптомов"
+//	@Success		200	{array}		models.PreparationsToSymptoms	"Список препаратов по симптомам"
+//	@Failure		400	{object}	models.Response					"Ошибка запроса"
+//	@Failure		500	{object}	models.Response					"Внутренняя ошибка сервера"
 //	@Router			/preparationsToSymptoms [get]
 func (s *Server) PreparationsToSymptomsHandler(c *fiber.Ctx) error {
 	idsStr := c.Query("ids")
@@ -47,17 +48,29 @@ func (s *Server) PreparationsToSymptomsHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	preparations := make([]models.Preparations, len(preparationsData))
+	preparations := make([]models.PreparationsToSymptoms, len(preparationsData))
 	for i, p := range preparationsData {
-		preparations[i] = models.Preparations{
+		preparations[i] = models.PreparationsToSymptoms{
 			ID:       p.ID,
 			Name:     p.Name,
 			Dose:     p.Dose,
 			Course:   p.Course,
 			Category: p.Category,
 			Option:   p.Option,
+			Similar:  mapSimilarDTOToApi(p.Similar),
 		}
 	}
 
 	return c.JSON(preparations)
+}
+
+func mapSimilarDTOToApi(list []dto.NameResponse) []models.NameResponse {
+	similar := make([]models.NameResponse, len(list))
+	for i, p := range list {
+		similar[i] = models.NameResponse{
+			ID:   p.ID,
+			Name: p.Name,
+		}
+	}
+	return similar
 }

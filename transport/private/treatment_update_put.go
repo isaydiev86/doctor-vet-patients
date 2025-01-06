@@ -74,12 +74,12 @@ func mapDtoPrescriptionForUpdateOfApi(api []models.PrescriptionForUpdate) []dto.
 
 	for i, p := range api {
 		prescriptionDTO[i] = dto.PrescriptionForUpdate{
-			TreatmentID: p.TreatmentID,
-			Name:        p.Name,
-			Dose:        p.Dose,
-			Course:      p.Course,
-			Category:    p.Category,
-			Option:      p.Option,
+			PreparationID: p.PreparationID,
+			Name:          p.Name,
+			Dose:          p.Dose,
+			Course:        p.Course,
+			Category:      p.Category,
+			Option:        p.Option,
 		}
 	}
 

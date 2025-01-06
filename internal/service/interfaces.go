@@ -30,7 +30,7 @@ type Database interface {
 	GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error)
 	GetSymptoms(ctx context.Context) ([]*dto.Symptoms, error)
 	GetPreparations(ctx context.Context) ([]*dto.Preparations, error)
-	GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.Preparations, error)
+	GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.PreparationsWithSimilar, error)
 
 	UserExists(ctx context.Context, userID string) (bool, error)
 	CreateUser(ctx context.Context, userID, name, role string) error

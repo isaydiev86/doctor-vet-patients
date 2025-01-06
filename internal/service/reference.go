@@ -18,6 +18,6 @@ func (s *Service) GetPreparations(ctx context.Context) ([]*dto.Preparations, err
 	return s.svc.DB.GetPreparations(ctx)
 }
 
-func (s *Service) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.Preparations, error) {
+func (s *Service) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.PreparationsWithSimilar, error) {
 	return s.svc.DB.GetPreparationsToSymptoms(ctx, ids)
 }
