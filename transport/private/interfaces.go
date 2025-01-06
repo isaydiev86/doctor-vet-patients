@@ -22,7 +22,7 @@ type Services interface {
 	UpdateTreatment(ctx context.Context, treatment dto.TreatmentUpdateToUser) error
 
 	GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error)
-	GetSymptoms(ctx context.Context) ([]*dto.Symptoms, error)
-	GetPreparations(ctx context.Context) ([]*dto.Preparations, error)
-	GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.PreparationsWithSimilar, error)
+	GetSymptoms(ctx context.Context) ([]dto.Symptoms, error)
+	GetPreparations(ctx context.Context) ([]dto.Preparations, error)
+	GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]dto.PreparationsWithSimilar, error)
 }

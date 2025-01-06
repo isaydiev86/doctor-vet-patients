@@ -9,7 +9,7 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 )
 
-func (db *DB) GetSymptoms(ctx context.Context) ([]*dto.Symptoms, error) {
+func (db *DB) GetSymptoms(ctx context.Context) ([]dto.Symptoms, error) {
 	var symptoms []*models.Symptoms
 
 	err := pgxscan.Select(ctx, db.DB, &symptoms, selectSymptomsSQL)
@@ -21,14 +21,14 @@ func (db *DB) GetSymptoms(ctx context.Context) ([]*dto.Symptoms, error) {
 	return mapDBSymptomsToDTO(symptoms), nil
 }
 
-func mapDBSymptomsToDTO(rows []*models.Symptoms) []*dto.Symptoms {
-	symptomsDTO := make([]*dto.Symptoms, len(rows))
+func mapDBSymptomsToDTO(rows []*models.Symptoms) []dto.Symptoms {
+	symptomsDTO := make([]dto.Symptoms, len(rows))
 	for i, row := range rows {
 		item := dto.Symptoms{
 			ID:   row.ID,
 			Name: row.Name.String,
 		}
-		symptomsDTO[i] = &item
+		symptomsDTO[i] = item
 	}
 	return symptomsDTO
 }

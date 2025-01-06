@@ -9,7 +9,7 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 )
 
-func (db *DB) GetPreparations(ctx context.Context) ([]*dto.Preparations, error) {
+func (db *DB) GetPreparations(ctx context.Context) ([]dto.Preparations, error) {
 	var preparations []*models.Preparations
 
 	err := pgxscan.Select(ctx, db.DB, &preparations, selectPreparationsSQL)
@@ -21,8 +21,8 @@ func (db *DB) GetPreparations(ctx context.Context) ([]*dto.Preparations, error) 
 	return mapDBPreparationsToDTO(preparations), nil
 }
 
-func mapDBPreparationsToDTO(rows []*models.Preparations) []*dto.Preparations {
-	preparationsDTO := make([]*dto.Preparations, len(rows))
+func mapDBPreparationsToDTO(rows []*models.Preparations) []dto.Preparations {
+	preparationsDTO := make([]dto.Preparations, len(rows))
 	for i, row := range rows {
 		item := dto.Preparations{
 			ID:       row.ID,
@@ -32,13 +32,13 @@ func mapDBPreparationsToDTO(rows []*models.Preparations) []*dto.Preparations {
 			Category: row.Category.String,
 			Option:   row.Option.String,
 		}
-		preparationsDTO[i] = &item
+		preparationsDTO[i] = item
 	}
 	return preparationsDTO
 }
 
-func (db *DB) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dto.PreparationsWithSimilar, error) {
-	var preparations []*models.PreparationsToSymptoms
+func (db *DB) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]dto.Preparations, error) {
+	var preparations []*models.Preparations
 
 	// группируем по популярности
 	query := `
@@ -50,35 +50,15 @@ func (db *DB) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dt
 				pr.course, 
 				pr.category, 
 				pr.option,
-				pr.popularity,
 				ROW_NUMBER() OVER (PARTITION BY pr.category ORDER BY pr.popularity DESC) as rank
 			FROM preparation as pr
 			JOIN symptom_relation_preparation as srp ON pr.id = srp.preparation_id
 			JOIN symptom as s ON srp.symptom_id = s.id
 			WHERE s.id = ANY($1)
-		),
-		similar_preparations AS (
-			SELECT
-				rp.category,
-				jsonb_agg(DISTINCT jsonb_build_object(
-					'id', rp.id,
-					'name', rp.name
-				)) AS similar
-			FROM ranked_preparations rp
-			WHERE rp.rank > 1
-			GROUP BY rp.category
 		)
-		SELECT 
-			rp.id, 
-			rp.name, 
-			rp.dose, 
-			rp.course, 
-			rp.category, 
-			rp.option,
-			COALESCE(sp.similar, '[]'::jsonb) AS similar
-		FROM ranked_preparations rp
-		LEFT JOIN similar_preparations sp ON rp.category = sp.category
-		WHERE rp.rank = 1;
+		SELECT id, name, dose, course, category, option
+		FROM ranked_preparations
+		WHERE rank = 1;
 	`
 
 	err := pgxscan.Select(ctx, db.DB, &preparations, query, ids)
@@ -87,25 +67,25 @@ func (db *DB) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]*dt
 		return nil, fmt.Errorf("failed to fetch preparations: %w", err)
 	}
 
-	return mapDBPreparationsWithSimilarToDTO(preparations), nil
+	return mapDBPreparationsToDTO(preparations), nil
 }
 
-func mapDBPreparationsWithSimilarToDTO(rows []*models.PreparationsToSymptoms) []*dto.PreparationsWithSimilar {
-	preparationsDTO := make([]*dto.PreparationsWithSimilar, len(rows))
-	for i, row := range rows {
-		item := dto.PreparationsWithSimilar{
-			ID:       row.ID,
-			Name:     row.Name.String,
-			Dose:     row.Dose.Float64,
-			Course:   row.Course.String,
-			Category: row.Category.String,
-			Option:   row.Option.String,
-			Similar:  mapSimilarDBToDto(row.Similar),
-		}
-		preparationsDTO[i] = &item
-	}
-	return preparationsDTO
-}
+//func mapDBPreparationsWithSimilarToDTO(rows []*models.PreparationsToSymptoms) []*dto.PreparationsWithSimilar {
+//	preparationsDTO := make([]*dto.PreparationsWithSimilar, len(rows))
+//	for i, row := range rows {
+//		item := dto.PreparationsWithSimilar{
+//			ID:       row.ID,
+//			Name:     row.Name.String,
+//			Dose:     row.Dose.Float64,
+//			Course:   row.Course.String,
+//			Category: row.Category.String,
+//			Option:   row.Option.String,
+//			Similar:  mapSimilarDBToDto(row.Similar),
+//		}
+//		preparationsDTO[i] = &item
+//	}
+//	return preparationsDTO
+//}
 
 func mapSimilarDBToDto(rows []models.NameRow) []dto.NameResponse {
 	similarDTO := make([]dto.NameResponse, len(rows))

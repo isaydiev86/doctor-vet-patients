@@ -26,11 +26,6 @@ type Preparations struct {
 }
 
 type PreparationsWithSimilar struct {
-	ID       int64
-	Name     string
-	Dose     float64
-	Course   string
-	Category string
-	Option   string
-	Similar  []NameResponse
+	Preparations
+	Similar []NameResponse
 }
