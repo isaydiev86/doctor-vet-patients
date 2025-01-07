@@ -53,6 +53,11 @@ type TreatmentSendForUser struct {
 	DoctorID string
 }
 
+type TreatmentUpdateStatus struct {
+	ID     int64
+	Status string
+}
+
 type TreatmentUpdateToUser struct {
 	ID          int64
 	DoctorID    string

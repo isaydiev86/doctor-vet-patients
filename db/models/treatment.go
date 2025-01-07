@@ -9,10 +9,11 @@ import (
 type StatusPrescription string
 
 const (
-	InProcess StatusPrescription = "в процессе" // когда отдали конкретному врачу
+	InProcess StatusPrescription = "процесс" // когда отдали конкретному врачу
 	Done      StatusPrescription = "завершен"
 	Decline   StatusPrescription = "отклонен"
-	InLine    StatusPrescription = "в очереди" // когда новая заявка
+	Wait      StatusPrescription = "ожидает" // когда новая заявка
+	End       StatusPrescription = "закрыта" // закрытие лечения
 )
 
 func (s StatusPrescription) String() string { return string(s) }

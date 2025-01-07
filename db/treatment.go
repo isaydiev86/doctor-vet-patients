@@ -18,7 +18,7 @@ func (db *DB) CreateTreatment(ctx context.Context, patientID int64) (int64, erro
 		RETURNING id;
 	`
 	var treatmentID int64
-	err := db.QueryRow(ctx, treatmentQuery, patientID, models.InLine.String()).Scan(&treatmentID)
+	err := db.QueryRow(ctx, treatmentQuery, patientID, models.Wait.String()).Scan(&treatmentID)
 	if err != nil {
 		return 0, fmt.Errorf("failed to insert treatment: %w", err)
 	}

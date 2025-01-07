@@ -53,6 +53,10 @@ func (s *Server) Start(_ context.Context) error {
 		return s.TreatmentUpdateHandler(c)
 	})
 
+	private.Put("/treatmentUpdateStatus", func(c *fiber.Ctx) error {
+		return s.TreatmentUpdateStatusHandler(c)
+	})
+
 	private.Get("/reference", func(c *fiber.Ctx) error {
 		return s.ReferenceHandler(c)
 	})

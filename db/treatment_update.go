@@ -70,7 +70,7 @@ func (db *DB) GetTreatmentForUser(ctx context.Context, userId string) (*dto.Trea
         LEFT JOIN 
             prescription pr ON t.id = pr.treatment_id
         WHERE 
-            t.doctor_id = $1 and t.status = 'в процессе'
+            t.doctor_id = $1 and t.status = 'процесс'
 		GROUP BY 
             t.id, p.id LIMIT 1;
 `

@@ -338,6 +338,24 @@ definitions:
     - doctorId
     - id
     type: object
+  models.TreatmentUpdateStatus:
+    properties:
+      id:
+        type: integer
+      status:
+        enum:
+        - в
+        - процессе
+        - завершен
+        - отклонен
+        - в
+        - очереди
+        - закрыта
+        type: string
+    required:
+    - id
+    - status
+    type: object
   models.TreatmentUpdateToUser:
     properties:
       comment:
@@ -358,7 +376,6 @@ definitions:
         minimum: 0
         type: number
     required:
-    - comment
     - doctorId
     - id
     type: object
@@ -721,6 +738,37 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: Получить детали лечения
+      tags:
+      - treatment
+  /treatmentUpdateStatus:
+    put:
+      consumes:
+      - application/json
+      description: Обновление статуса лечения
+      operationId: update_status_treatment
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/models.TreatmentUpdateStatus'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Обновление статуса лечения
       tags:
       - treatment
   /treatments:

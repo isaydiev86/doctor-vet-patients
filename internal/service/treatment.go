@@ -48,3 +48,7 @@ func (s *Service) UpdateTreatment(ctx context.Context, treatment dto.TreatmentUp
 		return nil
 	})
 }
+
+func (s *Service) UpdateStatusTreatment(ctx context.Context, treatment dto.TreatmentUpdateStatus) error {
+	return s.svc.DB.UpdateStatusTreatment(ctx, treatment)
+}

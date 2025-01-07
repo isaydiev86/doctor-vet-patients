@@ -543,6 +543,53 @@
                 }
             }
         },
+        "/treatmentUpdateStatus": {
+            "put": {
+                "description": "Обновление статуса лечения",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "treatment"
+                ],
+                "summary": "Обновление статуса лечения",
+                "operationId": "update_status_treatment",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.TreatmentUpdateStatus"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/treatments": {
             "get": {
                 "description": "Возвращает список всех лечений",
@@ -1155,10 +1202,33 @@
                 }
             }
         },
+        "models.TreatmentUpdateStatus": {
+            "type": "object",
+            "required": [
+                "id",
+                "status"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "в",
+                        "процессе",
+                        "завершен",
+                        "отклонен",
+                        "в",
+                        "очереди",
+                        "закрыта"
+                    ]
+                }
+            }
+        },
         "models.TreatmentUpdateToUser": {
             "type": "object",
             "required": [
-                "comment",
                 "doctorId",
                 "id"
             ],
