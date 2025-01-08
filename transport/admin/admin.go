@@ -41,6 +41,10 @@ func (s *Server) Start(_ context.Context) error {
 		keycloak.RoleValidationMiddleware(s.keycloak, s.log, allowedRoles...),
 	)
 
+	admin.Post("/symptoms", func(c *fiber.Ctx) error {
+		return s.SymptomAddHandler(c)
+	})
+
 	admin.Post("/patient", func(c *fiber.Ctx) error {
 		return s.PatientAddHandler(c)
 	})

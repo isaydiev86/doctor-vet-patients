@@ -191,6 +191,51 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Создать новый препарат",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "preparations"
+                ],
+                "summary": "Создать новый препарат",
+                "operationId": "create_preparation",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsAdd"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
             }
         },
         "/preparationsToSymptoms": {
@@ -336,6 +381,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/relationSymptomWithPreparation": {
+            "post": {
+                "description": "Создать связь симптома с препаратом",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "relations"
+                ],
+                "summary": "Создать связь симптома с препаратом",
+                "operationId": "relation_symptom_with_preparation",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RelationSymptomWithPreparation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/send_treatment": {
             "put": {
                 "description": "Назначить лечения на доктора",
@@ -405,6 +497,51 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.Symptoms"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Создать новый симптом",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "symptoms"
+                ],
+                "summary": "Создать новый симптом",
+                "operationId": "create_symptom",
+                "parameters": [
+                    {
+                        "description": "Запрос",
+                        "name": "Form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.NameAdd"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "400": {
@@ -817,6 +954,33 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsAdd": {
+            "type": "object",
+            "required": [
+                "category",
+                "course",
+                "dose",
+                "name",
+                "option"
+            ],
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "course": {
+                    "type": "string"
+                },
+                "dose": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "option": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsToSymptoms": {
             "type": "object",
             "required": [
@@ -1030,6 +1194,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.NameAdd": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.NameResponse": {
             "type": "object",
             "required": [
@@ -1109,6 +1284,21 @@ const docTemplate = `{
                 },
                 "refreshToken": {
                     "type": "string"
+                }
+            }
+        },
+        "models.RelationSymptomWithPreparation": {
+            "type": "object",
+            "required": [
+                "preparationId",
+                "symptomId"
+            ],
+            "properties": {
+                "preparationId": {
+                    "type": "integer"
+                },
+                "symptomId": {
+                    "type": "integer"
                 }
             }
         },
@@ -1226,12 +1416,10 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "enum": [
-                        "в",
-                        "процессе",
+                        "процесс",
                         "завершен",
                         "отклонен",
-                        "в",
-                        "очереди",
+                        "ожидает",
                         "закрыта"
                     ]
                 }

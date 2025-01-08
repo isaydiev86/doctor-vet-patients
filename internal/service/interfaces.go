@@ -29,10 +29,16 @@ type Database interface {
 	UpdatePatient(ctx context.Context, patient dto.Patient) error
 
 	GetReferences(ctx context.Context, typeQuery string) ([]*dto.Reference, error)
+
 	GetSymptoms(ctx context.Context) ([]dto.Symptoms, error)
+	CreateSymptom(ctx context.Context, name string) error
+
 	GetPreparations(ctx context.Context) ([]dto.Preparations, error)
 	GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]dto.Preparations, error)
+	CreatePreparations(ctx context.Context, pr dto.PreparationsAdd) error
 
 	UserExists(ctx context.Context, userID string) (bool, error)
 	CreateUser(ctx context.Context, userID, name, role string) error
+
+	AddRelationSymptomWithPreparation(ctx context.Context, symptomID, preparationID int64) error
 }

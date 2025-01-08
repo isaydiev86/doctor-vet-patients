@@ -25,6 +25,14 @@ type Preparations struct {
 	Option   string
 }
 
+type PreparationsAdd struct {
+	Name     string
+	Dose     float64
+	Course   string
+	Category string
+	Option   string
+}
+
 type PreparationsWithSimilar struct {
 	Preparations
 	Similar []NameResponse

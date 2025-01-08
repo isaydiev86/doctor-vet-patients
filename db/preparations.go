@@ -9,6 +9,26 @@ import (
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 )
 
+func (db *DB) CreatePreparations(ctx context.Context, pr dto.PreparationsAdd) error {
+	query := `
+		INSERT INTO preparation (name, dose, course, category, option)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (name) DO UPDATE
+		SET dose = EXCLUDED.dose,
+		    course = EXCLUDED.course,
+		    category = EXCLUDED.category,
+		    option = EXCLUDED.option;
+	`
+	_, err := db.Exec(ctx, query, pr.Name, pr.Dose, pr.Course, pr.Category, pr.Option)
+
+	if err != nil {
+		db.logger.Error("failed to create preparation", err)
+		return fmt.Errorf("failed to create preparation: %w", err)
+	}
+
+	return nil
+}
+
 func (db *DB) GetPreparations(ctx context.Context) ([]dto.Preparations, error) {
 	var preparations []*models.Preparations
 
@@ -68,33 +88,4 @@ func (db *DB) GetPreparationsToSymptoms(ctx context.Context, ids []int64) ([]dto
 	}
 
 	return mapDBPreparationsToDTO(preparations), nil
-}
-
-//func mapDBPreparationsWithSimilarToDTO(rows []*models.PreparationsToSymptoms) []*dto.PreparationsWithSimilar {
-//	preparationsDTO := make([]*dto.PreparationsWithSimilar, len(rows))
-//	for i, row := range rows {
-//		item := dto.PreparationsWithSimilar{
-//			ID:       row.ID,
-//			Name:     row.Name.String,
-//			Dose:     row.Dose.Float64,
-//			Course:   row.Course.String,
-//			Category: row.Category.String,
-//			Option:   row.Option.String,
-//			Similar:  mapSimilarDBToDto(row.Similar),
-//		}
-//		preparationsDTO[i] = &item
-//	}
-//	return preparationsDTO
-//}
-
-func mapSimilarDBToDto(rows []models.NameRow) []dto.NameResponse {
-	similarDTO := make([]dto.NameResponse, len(rows))
-	for i, row := range rows {
-		item := dto.NameResponse{
-			ID:   row.ID,
-			Name: row.Name,
-		}
-		similarDTO[i] = item
-	}
-	return similarDTO
 }

@@ -65,6 +65,25 @@ definitions:
     - name
     - option
     type: object
+  github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsAdd:
+    properties:
+      category:
+        type: string
+      course:
+        type: string
+      dose:
+        type: number
+      name:
+        type: string
+      option:
+        type: string
+    required:
+    - category
+    - course
+    - dose
+    - name
+    - option
+    type: object
   github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsToSymptoms:
     properties:
       category:
@@ -213,6 +232,13 @@ definitions:
       userId:
         type: string
     type: object
+  models.NameAdd:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   models.NameResponse:
     properties:
       id:
@@ -267,6 +293,16 @@ definitions:
         type: string
       refreshToken:
         type: string
+    type: object
+  models.RelationSymptomWithPreparation:
+    properties:
+      preparationId:
+        type: integer
+      symptomId:
+        type: integer
+    required:
+    - preparationId
+    - symptomId
     type: object
   models.Response:
     properties:
@@ -344,12 +380,10 @@ definitions:
         type: integer
       status:
         enum:
-        - в
-        - процессе
+        - процесс
         - завершен
         - отклонен
-        - в
-        - очереди
+        - ожидает
         - закрыта
         type: string
     required:
@@ -500,6 +534,36 @@ paths:
       summary: Получить список препаратов
       tags:
       - preparations
+    post:
+      consumes:
+      - application/json
+      description: Создать новый препарат
+      operationId: create_preparation
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_isaydiev86_doctor-vet-patients_transport_models.PreparationsAdd'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Создать новый препарат
+      tags:
+      - preparations
   /preparationsToSymptoms:
     get:
       consumes:
@@ -595,6 +659,37 @@ paths:
       summary: Обновление токена
       tags:
       - auth
+  /relationSymptomWithPreparation:
+    post:
+      consumes:
+      - application/json
+      description: Создать связь симптома с препаратом
+      operationId: relation_symptom_with_preparation
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/models.RelationSymptomWithPreparation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Создать связь симптома с препаратом
+      tags:
+      - relations
   /send_treatment:
     put:
       consumes:
@@ -650,6 +745,36 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: Получить список симптомов
+      tags:
+      - symptoms
+    post:
+      consumes:
+      - application/json
+      description: Создать новый симптом
+      operationId: create_symptom
+      parameters:
+      - description: Запрос
+        in: body
+        name: Form
+        required: true
+        schema:
+          $ref: '#/definitions/models.NameAdd'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Создать новый симптом
       tags:
       - symptoms
   /treatment:

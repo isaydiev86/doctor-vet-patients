@@ -22,6 +22,14 @@ type Preparations struct {
 	Option   sql.NullString  `db:"option"`
 }
 
+type PreparationsAdd struct {
+	Name     sql.NullString  `db:"name"`
+	Dose     sql.NullFloat64 `db:"dose"`
+	Course   sql.NullString  `db:"course"`
+	Category sql.NullString  `db:"category"`
+	Option   sql.NullString  `db:"option"`
+}
+
 type NameRow struct {
 	ID   int64  `db:"id" json:"id"`
 	Name string `db:"name" json:"name"`
@@ -35,5 +43,5 @@ type PreparationsToSymptoms struct {
 	Category sql.NullString  `db:"category"`
 	Option   sql.NullString  `db:"option"`
 
-	Similar []NameRow `db:"similar"` // Список остальных препаратов в категории
+	Similar []NameRow `db:"similar"` // Список остальных препаратов категории
 }

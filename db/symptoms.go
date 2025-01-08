@@ -32,3 +32,20 @@ func mapDBSymptomsToDTO(rows []*models.Symptoms) []dto.Symptoms {
 	}
 	return symptomsDTO
 }
+
+func (db *DB) CreateSymptom(ctx context.Context, name string) error {
+	query := `
+		INSERT INTO symptom (name)
+		VALUES ($1)
+		ON CONFLICT (name) DO UPDATE
+		SET name = EXCLUDED.name;
+	`
+	_, err := db.Exec(ctx, query, name)
+
+	if err != nil {
+		db.logger.Error("failed to create symptom", err)
+		return fmt.Errorf("failed to create symptom: %w", err)
+	}
+
+	return nil
+}
