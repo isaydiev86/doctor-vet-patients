@@ -37,8 +37,7 @@ func (db *DB) CreateSymptom(ctx context.Context, name string) error {
 	query := `
 		INSERT INTO symptom (name)
 		VALUES ($1)
-		ON CONFLICT (name) DO UPDATE
-		SET name = EXCLUDED.name;
+		ON CONFLICT (name) DO NOTHING;
 	`
 	_, err := db.Exec(ctx, query, name)
 

@@ -9,9 +9,7 @@ func (db *DB) AddRelationSymptomWithPreparation(ctx context.Context, symptomID, 
 	query := `
 		INSERT INTO symptom_relation_preparation (symptom_id, preparation_id)
 		VALUES ($1, $2)
-		ON CONFLICT (symptom_id, preparation_id) DO UPDATE
-		SET symptom_id = EXCLUDED.symptom_id,
-		    preparation_id = EXCLUDED.preparation_id;
+		ON CONFLICT (symptom_id, preparation_id) DO NOTHING;
 	`
 	_, err := db.Exec(ctx, query, symptomID, preparationID)
 
