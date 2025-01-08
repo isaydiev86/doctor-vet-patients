@@ -7,6 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 	"github.com/isaydiev86/doctor-vet-patients/transport"
+	"github.com/isaydiev86/doctor-vet-patients/transport/middlewares"
+	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
 func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Service) *Server {
@@ -41,14 +43,24 @@ func (s *Server) Start(_ context.Context) error {
 		keycloak.RoleValidationMiddleware(s.keycloak, s.log, allowedRoles...),
 	)
 
-	admin.Post("/symptoms", func(c *fiber.Ctx) error {
+	// Использование middleware для парсинга и валидации
+	admin.Post("/symptoms", middlewares.ParseAndValidateMiddleware(&models.NameAdd{}), func(c *fiber.Ctx) error {
 		return s.SymptomAddHandler(c)
 	})
 
-	admin.Post("/patient", func(c *fiber.Ctx) error {
+	admin.Post("/preparations", middlewares.ParseAndValidateMiddleware(&models.PreparationsAdd{}), func(c *fiber.Ctx) error {
+		return s.PreparationAddHandler(c)
+	})
+
+	admin.Post("/relationSymptomWithPreparation", middlewares.ParseAndValidateMiddleware(&models.RelationSymptomWithPreparation{}), func(c *fiber.Ctx) error {
+		return s.RelationSymptomWithPreparationHandler(c)
+	})
+
+	admin.Post("/patient", middlewares.ParseAndValidateMiddleware(&models.Patient{}), func(c *fiber.Ctx) error {
 		return s.PatientAddHandler(c)
 	})
-	admin.Put("/patient", func(c *fiber.Ctx) error {
+
+	admin.Put("/patient", middlewares.ParseAndValidateMiddleware(&models.Patient{}), func(c *fiber.Ctx) error {
 		return s.PatientUpdateHandler(c)
 	})
 
@@ -60,7 +72,7 @@ func (s *Server) Start(_ context.Context) error {
 		return s.TreatmentHandler(c)
 	})
 
-	admin.Put("/treatment", func(c *fiber.Ctx) error {
+	admin.Put("/treatment", middlewares.ParseAndValidateMiddleware(&models.TreatmentSendForUser{}), func(c *fiber.Ctx) error {
 		return s.TreatmentSendOnUserHandler(c)
 	})
 

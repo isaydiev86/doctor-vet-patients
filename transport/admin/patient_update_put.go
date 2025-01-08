@@ -15,27 +15,19 @@ import (
 //	@Accept			json
 //	@Produce		json
 //
-//	@Param			Form	body		models.Patient	true	"Запрос"
+//	@Param			Form	body		models.PatientUpdate	true	"Запрос"
 //
 //	@Success		200		{object}	models.Response	"Успешный ответ"
 //	@Failure		400		{object}	models.Response	"Ошибка запроса"
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/patient [put]
 func (s *Server) PatientUpdateHandler(c *fiber.Ctx) error {
-	var patient models.Patient
-	if err := c.BodyParser(&patient); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Invalid request data",
-			Description: "Failed to parse request body",
-		})
-	}
-
-	if err := validate.Struct(patient); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Validation failed",
-			Description: err.Error(),
+	patient, ok := c.Locals("parsedRequest").(*models.PatientUpdate)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
+			Code:        fiber.StatusInternalServerError,
+			Message:     "Internal server error",
+			Description: "Failed to parse request data",
 		})
 	}
 
@@ -51,12 +43,12 @@ func (s *Server) PatientUpdateHandler(c *fiber.Ctx) error {
 
 	return c.JSON(models.Response{
 		Code:        fiber.StatusOK,
-		Message:     "Success",
-		Description: "Success",
+		Message:     "Success update patient",
+		Description: "Success update patient",
 	})
 }
 
-func getDtoUpdatePatientOfApi(patient models.Patient) dto.Patient {
+func getDtoUpdatePatientOfApi(patient *models.PatientUpdate) dto.Patient {
 	return dto.Patient{
 		ID:         patient.ID,
 		Fio:        patient.Fio,

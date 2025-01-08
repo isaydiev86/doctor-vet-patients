@@ -1,13 +1,10 @@
 package admin
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
-
-var validate = validator.New()
 
 // PatientAddHandler Создать нового пациента
 //
@@ -25,20 +22,12 @@ var validate = validator.New()
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/patient [post]
 func (s *Server) PatientAddHandler(c *fiber.Ctx) error {
-	var patient models.Patient
-	if err := c.BodyParser(&patient); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Invalid request data",
-			Description: "Failed to parse request body",
-		})
-	}
-
-	if err := validate.Struct(patient); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Validation failed",
-			Description: err.Error(),
+	patient, ok := c.Locals("parsedRequest").(*models.Patient)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
+			Code:        fiber.StatusInternalServerError,
+			Message:     "Internal server error",
+			Description: "Failed to parse request data",
 		})
 	}
 
@@ -58,7 +47,7 @@ func (s *Server) PatientAddHandler(c *fiber.Ctx) error {
 	})
 }
 
-func getDtoPatientOfApi(patient models.Patient) dto.Patient {
+func getDtoPatientOfApi(patient *models.Patient) dto.Patient {
 	return dto.Patient{
 		Fio:        patient.Fio,
 		Phone:      patient.Phone,

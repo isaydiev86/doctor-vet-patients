@@ -21,23 +21,14 @@ import (
 //	@Failure		500		{object}	models.Response							"Внутренняя ошибка сервера"
 //	@Router			/relationSymptomWithPreparation [post]
 func (s *Server) RelationSymptomWithPreparationHandler(c *fiber.Ctx) error {
-	var relation models.RelationSymptomWithPreparation
-	if err := c.BodyParser(&relation); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Invalid request data",
-			Description: "Failed to parse request body",
+	relation, ok := c.Locals("parsedRequest").(*models.RelationSymptomWithPreparation)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
+			Code:        fiber.StatusInternalServerError,
+			Message:     "Internal server error",
+			Description: "Failed to parse request data",
 		})
 	}
-
-	if err := validate.Struct(relation); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Validation failed",
-			Description: err.Error(),
-		})
-	}
-
 	err := s.svc.AddRelationSymptomWithPreparation(c.Context(), relation.SymptomID, relation.PreparationID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{

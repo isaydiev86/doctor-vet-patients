@@ -1,13 +1,10 @@
 package private
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
-
-var validate = validator.New()
 
 // TreatmentUpdateHandler Обновление лечения
 //
@@ -25,20 +22,12 @@ var validate = validator.New()
 //	@Failure		500		{object}	models.Response					"Внутренняя ошибка сервера"
 //	@Router			/treatment [put]
 func (s *Server) TreatmentUpdateHandler(c *fiber.Ctx) error {
-	var treatment models.TreatmentUpdateToUser
-	if err := c.BodyParser(&treatment); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Invalid request data",
-			Description: "Failed to parse request body",
-		})
-	}
-
-	if err := validate.Struct(treatment); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Validation failed",
-			Description: err.Error(),
+	treatment, ok := c.Locals("parsedRequest").(*models.TreatmentUpdateToUser)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
+			Code:        fiber.StatusInternalServerError,
+			Message:     "Internal server error",
+			Description: "Failed to parse request data",
 		})
 	}
 
@@ -58,7 +47,7 @@ func (s *Server) TreatmentUpdateHandler(c *fiber.Ctx) error {
 	})
 }
 
-func mapDtoUpdateTreatmentOfApi(api models.TreatmentUpdateToUser) dto.TreatmentUpdateToUser {
+func mapDtoUpdateTreatmentOfApi(api *models.TreatmentUpdateToUser) dto.TreatmentUpdateToUser {
 	return dto.TreatmentUpdateToUser{
 		ID:            api.ID,
 		DoctorID:      api.DoctorID,

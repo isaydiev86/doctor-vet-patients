@@ -22,20 +22,12 @@ import (
 //	@Failure		500		{object}	models.Response			"Внутренняя ошибка сервера"
 //	@Router			/preparations [post]
 func (s *Server) PreparationAddHandler(c *fiber.Ctx) error {
-	var pr models.PreparationsAdd
-	if err := c.BodyParser(&pr); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Invalid request data",
-			Description: "Failed to parse request body",
-		})
-	}
-
-	if err := validate.Struct(pr); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Validation failed",
-			Description: err.Error(),
+	pr, ok := c.Locals("parsedRequest").(*models.PreparationsAdd)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
+			Code:        fiber.StatusInternalServerError,
+			Message:     "Internal server error",
+			Description: "Failed to parse request data",
 		})
 	}
 
@@ -50,12 +42,12 @@ func (s *Server) PreparationAddHandler(c *fiber.Ctx) error {
 
 	return c.JSON(models.Response{
 		Code:        fiber.StatusOK,
-		Message:     "Success",
-		Description: "Success",
+		Message:     "Success create preparations",
+		Description: "Success create preparations",
 	})
 }
 
-func mapPreparationDtoOfApi(add models.PreparationsAdd) dto.PreparationsAdd {
+func mapPreparationDtoOfApi(add *models.PreparationsAdd) dto.PreparationsAdd {
 	return dto.PreparationsAdd{
 		Name:     add.Name,
 		Dose:     add.Dose,

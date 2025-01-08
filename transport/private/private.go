@@ -7,6 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/pkg/keycloak"
 	"github.com/isaydiev86/doctor-vet-patients/transport"
+	"github.com/isaydiev86/doctor-vet-patients/transport/middlewares"
+	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
 func New(cfg transport.Config, svc Services, log Logger, keycloak *keycloak.Service) *Server {
@@ -49,11 +51,11 @@ func (s *Server) Start(_ context.Context) error {
 		return s.TreatmentForUserHandler(c)
 	})
 
-	private.Put("/treatment", func(c *fiber.Ctx) error {
+	private.Put("/treatment", middlewares.ParseAndValidateMiddleware(&models.TreatmentUpdateToUser{}), func(c *fiber.Ctx) error {
 		return s.TreatmentUpdateHandler(c)
 	})
 
-	private.Put("/treatmentUpdateStatus", func(c *fiber.Ctx) error {
+	private.Put("/treatmentUpdateStatus", middlewares.ParseAndValidateMiddleware(&models.TreatmentUpdateStatus{}), func(c *fiber.Ctx) error {
 		return s.TreatmentUpdateStatusHandler(c)
 	})
 

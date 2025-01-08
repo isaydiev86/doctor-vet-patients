@@ -21,20 +21,12 @@ import (
 //	@Failure		500		{object}	models.Response	"Внутренняя ошибка сервера"
 //	@Router			/symptoms [post]
 func (s *Server) SymptomAddHandler(c *fiber.Ctx) error {
-	var symptom models.NameAdd
-	if err := c.BodyParser(&symptom); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Invalid request data",
-			Description: "Failed to parse request body",
-		})
-	}
-
-	if err := validate.Struct(symptom); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.Response{
-			Code:        fiber.StatusBadRequest,
-			Message:     "Validation failed",
-			Description: err.Error(),
+	symptom, ok := c.Locals("parsedRequest").(*models.NameAdd)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.Response{
+			Code:        fiber.StatusInternalServerError,
+			Message:     "Internal server error",
+			Description: "Failed to parse request data",
 		})
 	}
 
@@ -49,7 +41,7 @@ func (s *Server) SymptomAddHandler(c *fiber.Ctx) error {
 
 	return c.JSON(models.Response{
 		Code:        fiber.StatusOK,
-		Message:     "Success",
-		Description: "Success",
+		Message:     "Success create symptom",
+		Description: "Success create symptom",
 	})
 }
