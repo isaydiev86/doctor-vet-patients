@@ -3,6 +3,7 @@ package admin
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
+	"github.com/isaydiev86/doctor-vet-patients/pkg/utils"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
 
@@ -69,11 +70,10 @@ func getPatientOfDTO(dto dto.Patient) models.Patient {
 		ID:         dto.ID,
 		Fio:        dto.Fio,
 		Phone:      dto.Phone,
-		Address:    dto.Address,
-		Animal:     dto.Animal,
+		Animal:     utils.ToPtr(dto.Animal),
 		Name:       dto.Name,
-		Breed:      dto.Breed,
-		Age:        dto.Age,
+		Breed:      utils.ToPtr(dto.Breed),
+		Age:        utils.ToPtr(dto.Age),
 		Gender:     dto.Gender,
 		IsNeutered: dto.IsNeutered,
 	}

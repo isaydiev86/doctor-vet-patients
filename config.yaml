@@ -34,6 +34,6 @@ admin:
 keycloak:
   url: "http://localhost:8080/auth"
   realm: "doctor_vet"
-  client_id: "dovtor_vet_client"
-  secret: "4DpiMsSSm03VdV7VwFUMg5F0gYz2NDPu"
-  rsa256: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2Ohoqxk7yeUcSy+pdUWMwOur9KgqwKQ6+sDHdFaL5zF0YjMvvr+Kkb+IOPZ8yXERI5kRZrZxKU+RD8G+I9WBjLqzfNZ7sFYJAOC6MX48/cRYxaiFnHxv/2S/C/0KxNS1WyyTjVMKijqaSHXdgeGPfR/4PaPlV7e8Y2KWZb+cdZ46NuWAijNi9BB/ugLq3+v1wgSUHgx2d/sdcEqKlYCuTH3ajwYfe6BuIjkuRZzq28A9LRaGu0ovPFQbvvmjhNUn4EgkN5eEZ45riXmfMez8nW0EOrHppQR1jc7FiiZf/lrFUWB0mwBJt2g3pEgsQ5iNTTJv8Vk1MJDREQ+jgJvuMQIDAQAB"
+  client_id: "doctor_vet_client"
+  secret: "SyR9rLjb1aVQXKT7CcgHsyhydVk2CJZ2"
+  rsa256: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0W2wf0btjcMeEun6DfVI8ouH1LyAMY/wRAg18/MPjc3RKwmR5ZCK+E7v60peMGwDkXeVwVDco0/3r6UUdaiLr2lCsnZ+v6xn04Gpj7Gy2Bf6ULa/COLexdK8hho9WxITtIAKm6uEDHD0IKb3UG/0EHNVtwOmmm5SoBjaXtwgSvfjxIf7RvE3flk0FNVWADh+nSDwJ75DP6qLJfcXgbXg8OG56YzhYkWIMR8cJ97mVRW5WpsIYTxn+l6txiNI0CVclcsUUBfQqt/duoNwDtnvBCUv9bcgoSBQ41LhNaQeqtuLQtetTxhMW/H0vMj5LDOBnULY2bjxF4Dab+tkeTNDiQIDAQAB"

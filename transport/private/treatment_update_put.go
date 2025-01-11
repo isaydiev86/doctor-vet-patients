@@ -55,6 +55,7 @@ func mapDtoUpdateTreatmentOfApi(api *models.TreatmentUpdateToUser) dto.Treatment
 		Temperature:   api.Temperature,
 		Comment:       api.Comment,
 		Prescriptions: mapDtoPrescriptionForUpdateOfApi(api.Prescriptions),
+		AddInfo:       mapAddInfoOfApi(api.AddInfo),
 	}
 }
 
@@ -73,4 +74,17 @@ func mapDtoPrescriptionForUpdateOfApi(api []models.PrescriptionForUpdate) []dto.
 	}
 
 	return prescriptionDTO
+}
+
+func mapAddInfoOfApi(api []models.AddInfo) []dto.AddInfo {
+	addInfo := make([]dto.AddInfo, len(api))
+	for i, a := range api {
+		addInfo[i] = dto.AddInfo{
+			Key:      a.Key,
+			Value:    a.Value,
+			DataType: a.DataType,
+			Name:     a.Name,
+		}
+	}
+	return addInfo
 }

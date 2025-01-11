@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/isaydiev86/doctor-vet-patients/internal/dto"
 	sysError "github.com/isaydiev86/doctor-vet-patients/internal/errors"
 	"github.com/isaydiev86/doctor-vet-patients/transport/models"
 )
@@ -72,7 +73,21 @@ func (s *Server) TreatmentForUserHandler(c *fiber.Ctx) error {
 		Temperature:   treatmentsDto.Temperature,
 		Patient:       getPatientOfDTO(treatmentsDto.Patient),
 		Prescriptions: getPrescriptionOfDTO(treatmentsDto.Prescription),
+		AddInfo:       mapAddInfoToApi(treatmentsDto.AddInfo),
 	}
 
 	return c.JSON(treatment)
+}
+
+func mapAddInfoToApi(dto []dto.AddInfo) []models.AddInfo {
+	addInfo := make([]models.AddInfo, len(dto))
+	for i, a := range dto {
+		addInfo[i] = models.AddInfo{
+			Key:      a.Key,
+			Value:    a.Value,
+			DataType: a.DataType,
+			Name:     a.Name,
+		}
+	}
+	return addInfo
 }

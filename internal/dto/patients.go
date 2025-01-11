@@ -4,7 +4,6 @@ type Patient struct {
 	ID         int64
 	Fio        string
 	Phone      string
-	Address    string
 	Animal     string
 	Name       string
 	Breed      string

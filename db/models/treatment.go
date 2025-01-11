@@ -12,8 +12,9 @@ const (
 	InProcess StatusPrescription = "процесс" // когда отдали конкретному врачу
 	Done      StatusPrescription = "завершен"
 	Decline   StatusPrescription = "отклонен"
-	Wait      StatusPrescription = "ожидает" // когда новая заявка
-	End       StatusPrescription = "закрыта" // закрытие лечения
+	Wait      StatusPrescription = "ожидает"   // когда новая заявка
+	InPayment StatusPrescription = "на оплату" // когда  заявку завершил врач и отправил админу
+	End       StatusPrescription = "закрыта"   // закрытие лечения
 )
 
 func (s StatusPrescription) String() string { return string(s) }
@@ -51,19 +52,30 @@ type TreatmentRow struct {
 }
 
 type TreatmentDetailRow struct {
-	ID                int64           `db:"id"`
-	PatientID         int64           `db:"patient_id"`
-	DoctorID          sql.NullString  `db:"doctor_id"`
-	Status            sql.NullString  `db:"status"`
-	CreatedAt         time.Time       `db:"created_at"`
-	UpdatedAt         time.Time       `db:"updated_at"`
-	BeginAt           sql.NullTime    `db:"begin_at"`  // начало лечения
-	EndAt             sql.NullTime    `db:"end_at"`    // конец лечения
-	Comment           sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
-	IsActive          int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
-	Weight            sql.NullFloat64 `db:"weight"`
-	Temperature       sql.NullFloat64 `db:"temperature"`
-	Patient           `db:"patient"`
+	ID          int64           `db:"id"`
+	PatientID   int64           `db:"patient_id"`
+	DoctorID    sql.NullString  `db:"doctor_id"`
+	Status      sql.NullString  `db:"status"`
+	CreatedAt   time.Time       `db:"created_at"`
+	UpdatedAt   time.Time       `db:"updated_at"`
+	BeginAt     sql.NullTime    `db:"begin_at"`  // начало лечения
+	EndAt       sql.NullTime    `db:"end_at"`    // конец лечения
+	Comment     sql.NullString  `db:"comment"`   // информация в случаи закрытия лечения
+	IsActive    int64           `db:"is_active"` // завершено лечение или нет 1 - нет 0 - да
+	Weight      sql.NullFloat64 `db:"weight"`
+	Temperature sql.NullFloat64 `db:"temperature"`
+	Patient     `db:"patient"`
+
 	PrescriptionsJSON json.RawMessage `db:"prescriptions"`
 	Prescription      []Prescription  `db:"prescription" json:"prescription"`
+
+	AddInfoJSON json.RawMessage `db:"add_info"`
+	AddInfo     []AddInfo       `db:"-" json:"addInfo"`
+}
+
+type AddInfo struct {
+	Key      string      `json:"key"`
+	Value    interface{} `json:"value"`
+	DataType string      `json:"dataType"`
+	Name     string      `json:"name"`
 }

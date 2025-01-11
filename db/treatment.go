@@ -34,7 +34,7 @@ func (db *DB) GetTreatments(ctx context.Context, filter dto.TreatmentFilters) ([
 		t.id, t.patient_id, t.doctor_id, t.temperature, t.status, t.created_at, t.updated_at, t.begin_at, t.end_at,
 		t.comment, t.is_active, t.weight,
 		p.id AS "patient.id", p.fio AS "patient.fio", p.phone AS "patient.phone",
-		p.age AS "patient.age", p.address AS "patient.address", p.animal AS "patient.animal", p.name AS "patient.name",
+		p.age AS "patient.age", p.animal AS "patient.animal", p.name AS "patient.name",
 		p.breed AS "patient.breed", p.gender AS "patient.gender", p.is_neutered AS "patient.is_neutered"
 	FROM treatment t
 	LEFT JOIN
@@ -85,7 +85,6 @@ func mapTreatmentDBtoDTO(rows []*models.TreatmentRow) []*dto.Treatment {
 				ID:         row.Patient.ID,
 				Fio:        row.Patient.Fio.String,
 				Phone:      row.Patient.Phone.String,
-				Address:    row.Patient.Address.String,
 				Animal:     row.Patient.Animal.String,
 				Name:       row.Patient.Name.String,
 				Breed:      row.Patient.Breed.String,
@@ -124,6 +123,12 @@ func mapTreatmentDetailDBtoDTO(row *models.TreatmentDetailRow) *dto.TreatmentDet
 
 	prescription := make([]dto.Prescription, len(row.Prescription))
 
+	// Парсим поле add_info из JSON в слайс структур AddInfo
+	err := json.Unmarshal(row.AddInfoJSON, &row.AddInfo)
+	if err != nil {
+		return nil
+	}
+
 	for i, v := range row.Prescription {
 		item := dto.Prescription{
 			ID:          v.ID,
@@ -156,7 +161,6 @@ func mapTreatmentDetailDBtoDTO(row *models.TreatmentDetailRow) *dto.TreatmentDet
 			ID:         row.Patient.ID,
 			Fio:        row.Patient.Fio.String,
 			Phone:      row.Patient.Phone.String,
-			Address:    row.Patient.Address.String,
 			Animal:     row.Patient.Animal.String,
 			Name:       row.Patient.Name.String,
 			Breed:      row.Patient.Breed.String,
@@ -165,7 +169,21 @@ func mapTreatmentDetailDBtoDTO(row *models.TreatmentDetailRow) *dto.TreatmentDet
 			IsNeutered: row.Patient.IsNeutered,
 		},
 		Prescription: prescription,
+		AddInfo:      mapAddInfoToDTO(row.AddInfo),
 	}
 
 	return treatmentDetail
+}
+
+func mapAddInfoToDTO(row []models.AddInfo) []dto.AddInfo {
+	addInfo := make([]dto.AddInfo, len(row))
+	for i, a := range row {
+		addInfo[i] = dto.AddInfo{
+			Key:      a.Key,
+			Value:    a.Value,
+			DataType: a.DataType,
+			Name:     a.Name,
+		}
+	}
+	return addInfo
 }

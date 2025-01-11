@@ -1,21 +1,21 @@
 package db
 
 const createPatientSQL = `
-		INSERT INTO patient (fio, phone, address, animal, name, breed, gender, age, is_neutered)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		INSERT INTO patient (fio, phone, animal, name, breed, gender, age, is_neutered)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 		RETURNING id
 	`
 const updatePatientSQL = `
     UPDATE patient
-    SET fio = $1, phone = $2, address = $3, animal = $4, name = $5, breed = $6, gender = $7, age = $8, is_neutered = $9
-    WHERE id = $10;
+    SET fio = $1, phone = $2, animal = $3, name = $4, breed = $5, gender = $6, age = $7, is_neutered = $8
+    WHERE id = $9;
 `
 
 const selectTreatmentDetailSQL = `
 		SELECT 
             t.id, t.patient_id, t.doctor_id, t.temperature, t.status, t.created_at, t.updated_at, t.begin_at, t.end_at,
             t.comment, t.is_active, t.weight,
-            p.id AS "patient.id", p.fio AS "patient.fio", p.phone AS "patient.phone", p.address AS "patient.address",
+            p.id AS "patient.id", p.fio AS "patient.fio", p.phone AS "patient.phone",
             p.animal AS "patient.animal", p.name AS "patient.name", p.breed AS "patient.breed", p.gender AS "patient.gender",
             p.age AS "patient.age", p.is_neutered AS "patient.is_neutered",
             COALESCE(

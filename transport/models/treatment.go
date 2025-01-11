@@ -37,6 +37,8 @@ type TreatmentDetail struct {
 
 	Patient       Patient        `json:"patient"`       // инфа пациента
 	Prescriptions []Prescription `json:"prescriptions"` // список лечения
+
+	AddInfo []AddInfo `json:"addInfo"` // список доп полей
 }
 
 // TreatmentSendForUser реквест для передачи лечение на доктора
@@ -60,4 +62,13 @@ type TreatmentUpdateToUser struct {
 	Comment     string  `json:"comment"`
 
 	Prescriptions []PrescriptionForUpdate `json:"prescriptions" validate:"min=1"`
+
+	AddInfo []AddInfo `json:"addInfo"`
+}
+
+type AddInfo struct {
+	Key      string      `json:"key" validate:"required"`
+	Value    interface{} `json:"value"`
+	DataType string      `json:"dataType"`
+	Name     string      `json:"name"`
 }

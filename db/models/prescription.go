@@ -46,7 +46,6 @@ func (p *Prescription) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	// Преобразуем обычные значения в sql.NullString и sql.NullFloat64
 	p.Name = sql.NullString{String: aux.Name, Valid: aux.Name != ""}
 	p.Dose = sql.NullFloat64{Float64: aux.Dose, Valid: aux.Dose != 0}
 	p.Course = sql.NullString{String: aux.Course, Valid: aux.Course != ""}

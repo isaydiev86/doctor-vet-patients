@@ -37,6 +37,12 @@ type TreatmentDetail struct {
 
 	Patient      Patient // поля самого пациента потом мб сделаем отдельную dto, где меньше полей
 	Prescription []Prescription
+	AddInfo      []AddInfo
+
+	//	добавить список оказанных услуг services []Service
+	//	добавить расходники services []Others
+	// добавить поле isSelf - если пациент со своими препаратами(чтобы не вычитать из склада)
+
 }
 
 type TreatmentFilters struct {
@@ -66,4 +72,12 @@ type TreatmentUpdateToUser struct {
 	Comment     string
 
 	Prescriptions []PrescriptionForUpdate
+	AddInfo       []AddInfo
+}
+
+type AddInfo struct {
+	Key      string      `json:"key"`
+	Value    interface{} `json:"value"`
+	DataType string      `json:"dataType"`
+	Name     string      `json:"name"`
 }
